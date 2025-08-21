@@ -1,6 +1,6 @@
 package com.backend.Service;
 
-import com.backend.Model.UserDto;
+import com.backend.DTO.UserDto;
 
 public interface UserService {
 
