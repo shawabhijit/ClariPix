@@ -5,6 +5,7 @@ import com.backend.Repository.UserRepo;
 import com.backend.Service.UserService;
 import com.backend.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,6 +35,18 @@ public class UserServiceImpl implements UserService {
         User newUser = mapToUser(userDto);
         userRepo.save(newUser);
         return mapToDto(newUser);
+    }
+
+    @Override
+    public UserDto getUserByClerkId(String clerkId) {
+        User user = userRepo.findByClerkId(clerkId).orElseThrow(() -> new UsernameNotFoundException("user not found"));
+        return mapToDto(user);
+    }
+
+    @Override
+    public void deleteUserByClerkId(String clerkId) {
+        User user = userRepo.findByClerkId(clerkId).orElseThrow(() -> new UsernameNotFoundException("user not found"));
+        userRepo.delete(user);
     }
 
     private UserDto mapToDto(User user) {
