@@ -13,6 +13,4 @@ public interface ClipDropClient {
     @PostMapping(value = "/remove-background/v1" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     byte[] removeBackground(@RequestParam("image_file") MultipartFile file ,
                             @RequestHeader("x-api-key") String apiKey);
-
-
 }
