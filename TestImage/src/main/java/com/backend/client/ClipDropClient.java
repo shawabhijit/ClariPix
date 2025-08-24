@@ -1,4 +1,4 @@
-package com.backend.Client;
+package com.backend.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
