@@ -1,4 +1,4 @@
-import { Eraser, Palette, RefreshCw, Scissors, Zap } from 'lucide-react'
+import { ArrowRight, Eraser, Palette, RefreshCw, Scissors, Zap } from 'lucide-react'
 import { Card, CardContent } from './ui/card'
 import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
@@ -98,7 +98,7 @@ const Features = () => {
     ]
 
     return (
-        <section className="py-24 bg-background">
+        <section className="py-24 relative overflow-hidden">
             <div className="container px-4 mx-auto max-w-7xl ">
                 <div className="text-center space-y-4 mb-16">
                     <Badge variant="secondary" className="w-fit mx-auto">
@@ -124,7 +124,7 @@ const Features = () => {
                         return (
                             <div
                                 key={feature.id}
-                                className={`grid grid-cols-1 lg:grid-cols-2 gap-20 items-center ${!isEven ? "lg:grid-flow-col-dense" : ""}`}
+                                className={`grid grid-cols-1 p-5 md:p-0 lg:grid-cols-2 gap-20 items-center ${!isEven ? "lg:grid-flow-col-dense" : ""}`}
                             >
                                 {/* Demo Section */}
                                 <div className={`${!isEven ? "lg:col-start-2" : ""}`}>
@@ -180,10 +180,13 @@ const Features = () => {
                                     </div>
 
                                     <div className="flex gap-3 pt-4">
-                                        <Button className="gradient-primary text-white border-0" asChild>
-                                            {/* <Link to="/editor">Try Now</Link> */} Try now
+                                        <Button size="lg" className="gradient-primary text-white border-0 group cursor-pointer">
+                                            {/* <Link to="/editor"> */}
+                                            Try Now
+                                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                            {/* </Link> */}
                                         </Button>
-                                        <Button variant="outline">Learn More</Button>
+                                        <Button variant="outline" className='cursor-pointer'>Learn More</Button>
                                     </div>
                                 </div>
                             </div>
