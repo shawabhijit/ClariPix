@@ -1,15 +1,15 @@
-import PricingTable from "./Components/PricingTable"
-import BgRemove from "./pages/BgRemove"
+// import PricingTable from "./Components/PricingTable"
+// import BgRemove from "./pages/BgRemove"
+
+import LandingPage from "./pages/LandingPage"
 
 function App() {
 
   return (
     <>
-      <div className="flex items-center justify-center h-screen bg-cyan-700 text-3xl font-bold">
-        Hello ClariPix
-      </div>
-      <BgRemove />
-      <PricingTable />
+      <LandingPage />
+      {/* <BgRemove /> */}
+      {/* <PricingTable /> */}
     </>
   )
 }
