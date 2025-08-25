@@ -1,6 +1,5 @@
 import Features from '@/Components/Features'
 import HeroSections from '@/Components/HeroSections'
-import React from 'react'
 
 const LandingPage = () => {
     return (

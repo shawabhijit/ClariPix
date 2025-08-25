@@ -1,0 +1,174 @@
+import { ChevronDown, Eraser, Menu, Palette, RefreshCw, Scissors, Sparkles, X, Zap } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Button } from "./ui/button"
+import { useState } from "react"
+
+const Navbar = () => {
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isAiToolsOpen, setIsAiToolsOpen] = useState(false);
+
+    const aiTools = [
+        { name: "Remove Background", icon: Scissors, href: "/editor?tool=remove-bg" },
+        { name: "Change Background", icon: Palette, href: "/editor?tool=change-bg" },
+        { name: "Enhance Resolution", icon: Zap, href: "/editor?tool=enhance-resolution" },
+        { name: "Remove Objects", icon: Eraser, href: "/editor?tool=remove-objects" },
+        { name: "Convert Format", icon: RefreshCw, href: "/editor?tool=convert-format" },
+    ]
+    return (
+        <nav className="sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur bg-background/95">
+            <div className="container flex h-16 items-center justify-between px-4 mx-auto max-w-9xl">
+                {/* Logo */}
+                <Link to="/" className="flex items-center space-x-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg">
+                        <img src="/logo1.png" alt="" className="text-white" />
+                    </div>
+                    <span className="font-heading text-xl font-bold">ClariPix</span>
+                </Link>
+
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex items-center space-x-6">
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setIsAiToolsOpen(true)}
+                        onMouseLeave={() => setIsAiToolsOpen(false)}
+                    >
+                        <button className="flex items-center space-x-1 text-sm font-medium hover:text-primary transition-colors">
+                            <span>AI Tools</span>
+                            <ChevronDown className="h-3 w-3" />
+                        </button>
+
+                        {isAiToolsOpen && (
+                            <div className="absolute top-full left-0 mt-1 w-64 bg-background border border-border rounded-lg shadow-lg p-2">
+                                {aiTools.map((tool, index) => {
+                                    const Icon = tool.icon
+                                    return (
+                                        <Link
+                                            key={index}
+                                            to={tool.href}
+                                            className="flex items-center space-x-3 p-3 rounded-md hover:bg-muted transition-colors"
+                                        >
+                                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                                                <Icon className="w-4 h-4 text-white" />
+                                            </div>
+                                            <span className="text-sm font-medium">{tool.name}</span>
+                                        </Link>
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    <Link to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
+                        Editor
+                    </Link>
+                    <Link to="/history" className="text-sm font-medium hover:text-primary transition-colors">
+                        History
+                    </Link>
+                    <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
+                        About
+                    </Link>
+                    <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
+                        Contact
+                    </Link>
+                </div>
+
+                {/* Desktop Auth Buttons */}
+                <div className="hidden md:flex items-center space-x-3">
+                    <Button variant="ghost" size="sm" asChild>
+                        <Link to="/login">Login</Link>
+                    </Button>
+                    <Button size="sm" className="gradient-primary text-white border-0" asChild>
+                        <Link to="/register">Get Started</Link>
+                    </Button>
+                </div>
+
+                {/* Mobile Menu Button */}
+                <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </Button>
+            </div>
+
+            {/* Mobile Menu */}
+            {isMenuOpen && (
+                <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur">
+                    <div className="container px-4 py-4 space-y-3">
+                        <Link
+                            to="/editor"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Editor
+                        </Link>
+
+                        <div className="space-y-2">
+                            <span className="block text-sm font-medium text-muted-foreground">AI Tools</span>
+                            {aiTools.map((tool, index) => {
+                                const Icon = tool.icon
+                                return (
+                                    <Link
+                                        key={index}
+                                        to={tool.href}
+                                        className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted transition-colors ml-4"
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        <div className="w-6 h-6 rounded bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                                            <Icon className="w-3 h-3 text-white" />
+                                        </div>
+                                        <span className="text-sm">{tool.name}</span>
+                                    </Link>
+                                )
+                            })}
+                        </div>
+
+                        <Link
+                            to="/history"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            History
+                        </Link>
+                        <Link
+                            to="/reviews"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Reviews
+                        </Link>
+                        <Link
+                            to="/faq"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            FAQ
+                        </Link>
+                        <Link
+                            to="/about"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            About
+                        </Link>
+                        <Link
+                            to="/contact"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Contact
+                        </Link>
+                        <div className="flex flex-col space-y-2 pt-3 border-t border-border/40">
+                            <Button variant="ghost" size="sm" asChild>
+                                <Link to="/login">Login</Link>
+                            </Button>
+                            <Button size="sm" className="gradient-primary text-white border-0" asChild>
+                                <Link to="/register">Get Started</Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </nav>
+    )
+}
+
+export default Navbar

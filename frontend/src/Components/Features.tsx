@@ -1,7 +1,7 @@
 import { ArrowRight, Eraser, Palette, RefreshCw, Scissors, Zap } from 'lucide-react'
 import { Card, CardContent } from './ui/card'
 import { Button } from './ui/button'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { Badge } from './ui/badge'
 
 const Features = () => {
@@ -98,7 +98,7 @@ const Features = () => {
     ]
 
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-24 relative overflow-hidden ">
             <div className="container px-4 mx-auto max-w-7xl ">
                 <div className="text-center space-y-4 mb-16">
                     <Badge variant="secondary" className="w-fit mx-auto">
