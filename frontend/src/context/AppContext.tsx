@@ -3,6 +3,7 @@ import { createContext, useState, type Dispatch, type SetStateAction} from "reac
 import { useNavigate } from "react-router-dom";
 
 type AppContextType = {
+    backendUrl: string,
     image: File | boolean;
     setImage: Dispatch<SetStateAction<File | boolean>>;
     resultImage: string | boolean;
@@ -13,12 +14,16 @@ export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    //console.log(backendUrl)
+
     const [image , setImage ] = useState<boolean | File>(false);
     const [resultImage , setResultImage ] = useState<string | boolean>(false);
 
     const navigate = useNavigate();
 
     const contextValue: AppContextType = {
+        backendUrl,
         image,
         setImage,
         resultImage,

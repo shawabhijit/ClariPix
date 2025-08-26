@@ -2,8 +2,22 @@ import { ChevronDown, Eraser, Menu, Palette, RefreshCw, Scissors, X, Zap } from 
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
 import { useState } from "react"
+import { SignedIn, SignedOut, useClerk, UserButton, useUser } from "@clerk/clerk-react"
 
 const Navbar = () => {
+
+    const {openSignIn , openSignUp} = useClerk();
+    const {user} = useUser();
+
+    const openLogedIn = () => {
+        setIsMenuOpen(false);
+        openSignIn({});
+    }
+
+    const openReginter = () => {
+        setIsMenuOpen(true);
+        openSignUp({})
+    }
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAiToolsOpen, setIsAiToolsOpen] = useState(false);
@@ -59,10 +73,10 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    <Link to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link onClick={openLogedIn} to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
                         Editor
                     </Link>
-                    <Link to="/history" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link onClick={openLogedIn} to="/history" className="text-sm font-medium hover:text-primary transition-colors">
                         History
                     </Link>
                     <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
@@ -75,12 +89,20 @@ const Navbar = () => {
 
                 {/* Desktop Auth Buttons */}
                 <div className="hidden md:flex items-center space-x-3">
-                    <Button variant="ghost" size="sm" asChild>
-                        <Link to="/login">Login</Link>
-                    </Button>
-                    <Button size="sm" className="gradient-primary text-white border-0" asChild>
-                        <Link to="/register">Get Started</Link>
-                    </Button>
+                    <SignedOut>
+                        <Button variant="ghost" size="sm" onClick={openLogedIn}>
+                            Login
+                        </Button>
+                        <Button size="sm" className="gradient-primary text-white border-0" onClick={openReginter}>
+                            Get Started
+                        </Button>
+                    </SignedOut>
+                    <SignedIn>
+                        <p className="pr-3 font-bold ">
+                            Hi, {user?.fullName}
+                        </p>
+                        <UserButton />
+                    </SignedIn>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -92,7 +114,15 @@ const Navbar = () => {
             {/* Mobile Menu */}
             {isMenuOpen && (
                 <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur">
-                    <div className="container px-4 py-4 space-y-3">
+                    <div className="container px-6 py-4 space-y-3">
+                        <div className="flex gap-3 items-center py-4">
+                            <SignedIn>
+                                <UserButton />
+                            </SignedIn>
+                            <p className="font-bold ">
+                                {user?.fullName}
+                            </p>
+                        </div>
                         <Link
                             to="/editor"
                             className="block text-sm font-medium hover:text-primary transition-colors"
@@ -157,12 +187,14 @@ const Navbar = () => {
                             Contact
                         </Link>
                         <div className="flex flex-col space-y-2 pt-3 border-t border-border/40">
-                            <Button variant="ghost" size="sm" asChild>
-                                <Link to="/login">Login</Link>
-                            </Button>
-                            <Button size="sm" className="gradient-primary text-white border-0" asChild>
-                                <Link to="/register">Get Started</Link>
-                            </Button>
+                            <SignedOut>
+                                <Button variant="ghost" size="sm" onClick={openLogedIn}>
+                                    Login
+                                </Button>
+                                <Button size="sm" className="gradient-primary text-white border-0" onClick={openReginter}>
+                                    Get Started
+                                </Button>
+                            </SignedOut>
                         </div>
                     </div>
                 </div>
