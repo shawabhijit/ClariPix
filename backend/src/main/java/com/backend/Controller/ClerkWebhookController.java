@@ -6,14 +6,21 @@ import com.backend.Service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @RestController
 @RequestMapping("/api/webhooks")
 @RequiredArgsConstructor
+@Slf4j
 public class ClerkWebhookController {
 
     @Value("${clerk.webhook.secret-key}")
@@ -28,6 +35,19 @@ public class ClerkWebhookController {
             @RequestHeader("svix-signature") String svixSignature,
             @RequestBody String payload
     ) {
+        // STEP 1: VERIFY SIGNATURE (This is your security layer)
+//        if (!verifyWebhookSignature(svixId, svixTimestamp, svixSignature, payload)) {
+//            log.error("Invalid webhook signature - potential security threat!");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body("Invalid signature");
+//        }
+
+        // STEP 2: VERIFY TIMESTAMP (Prevent replay attacks)
+//        if (!isTimestampValid(svixTimestamp)) {
+//            log.error("Webhook timestamp too old - potential replay attack!");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body("Request too old");
+//        }
         RemoveBgResponse response = null;
         try {
             boolean isValid = verifyWebhookSignature(svixId , svixTimestamp , svixSignature , payload);
@@ -102,5 +122,17 @@ public class ClerkWebhookController {
     // in this case just returning true also work
     private boolean verifyWebhookSignature(String svixId, String svixTimestamp, String svixSignature, String payload) {
         return true;
+    }
+
+    private boolean isTimestampValid(String svixTimestamp) {
+        try {
+            long timestamp = Long.parseLong(svixTimestamp);
+            long currentTime = System.currentTimeMillis() / 1000;
+            long tolerance = 300; // 5 minutes tolerance
+
+            return Math.abs(currentTime - timestamp) <= tolerance;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

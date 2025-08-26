@@ -22,6 +22,9 @@ public class UserController {
     @PostMapping
     public ResponseEntity<RemoveBgResponse> createOrUpdateUser(@RequestBody UserDto user , Authentication authentication) {
         try {
+            System.out.println("JWT Auth name = " + authentication.getName());
+            System.out.println("Request clerkId = " + user.getClerkId());
+
             if (!authentication.getName().equals(user.getClerkId())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                         RemoveBgResponse.builder()
