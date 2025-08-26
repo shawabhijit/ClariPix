@@ -1,4 +1,4 @@
-import { ChevronDown, Eraser, Menu, Palette, RefreshCw, Scissors, Sparkles, X, Zap } from "lucide-react"
+import { ChevronDown, Eraser, Menu, Palette, RefreshCw, Scissors, X, Zap } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
 import { useState } from "react"

@@ -28,7 +28,8 @@ const Features = () => {
             description: "ClariPix Photo Editor is a complete toolkit that goes beyond basic cropping and resizing. Adjust brightness, contrast, saturation, or sharpness with ease. Add stickers, custom text, filters, and layout templates to create stunning visuals in minutes. With 75+ AI-powered effects, anyone can produce professional-looking photos without needing advanced skills.",
             gradient: "from-teal-500 to-emerald-600",
             demo: "",
-            image: "https://imgs.search.brave.com/kbjlVMkfkO3C21c3zrMCvfbtHgROp-XUwma1Sd4YGx4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWd2/My5mb3Rvci5jb20v/aW1hZ2VzL3NpZGUv/c3RlcC0yLWVkaXQt/YW5kLWVuaGFuY2Ut/cGhvdG8tb25saW5l/LnBuZw",
+            // image: "https://imgs.search.brave.com/kbjlVMkfkO3C21c3zrMCvfbtHgROp-XUwma1Sd4YGx4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWd2/My5mb3Rvci5jb20v/aW1hZ2VzL3NpZGUv/c3RlcC0yLWVkaXQt/YW5kLWVuaGFuY2Ut/cGhvdG8tb25saW5l/LnBuZw",
+            image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1756143999/10af822d-1519-4a4c-bbb3-51d06e27e249.png",
             result: "/abstract-geometric-shapes.png",
             details: [
                 "Crop, rotate, and resize instantly",
