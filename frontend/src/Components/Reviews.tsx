@@ -108,12 +108,12 @@ const Reviews = () => {
 
 
             {/* Stats Section */}
-            <div className="container relative px-4 mx-auto max-w-7xl py-16">
-                <div className="grid grid-cols-2 md:grid-cols-4 ">
+            <div className="container relative px-4 mx-auto max-w-7xl py-26">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {stats.map((stat, index) => {
                         const Icon = stat.icon
                         return (
-                            <Card key={index} className="group border-0 bg-primary/10 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer text-center">
+                            <Card key={index} className="group border-0 bg-primary/10 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer text-center p-6">
                                 <CardContent className="pt-2 text-center space-y-2">
                                     <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
                                         <Icon className="w-6 h-6 text-white" />

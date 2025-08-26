@@ -54,7 +54,7 @@ const CommingFeatures = () => {
                 <div className="max-w-7xl mx-auto ">
                     <div className="space-y-6">
                         {roadmapItems.map((item, index) => (
-                            <Card key={index} className="border-0 shadow-lg bg-primary/10">
+                            <Card key={index} className="border-0 shadow-lg bg-primary/10 rounded-2xl hover:bg-primary/20 hover:shadow-xl transition-shadow cursor-pointer">
                                 <CardContent className="p-6">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
