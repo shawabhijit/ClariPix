@@ -7,9 +7,11 @@ const CaseComponent = () => {
     const config = useConfig(
         () => ({
             role: 'Adopter',
+            baseURL: 'https://cdn.img.ly/packages/imgly/cesdk-js/1.58.0/assets',
             theme: 'dark',
             // Don't override license here - let CreativeEditor handle it from environment
             ui: {
+
                 elements: {
                     blocks: {
                         '//ly.img.ubq/page': {
@@ -28,14 +30,15 @@ const CaseComponent = () => {
                         }
                     },
                     navigation: {
-                        title: 'Photo Editor',
+                        // title: 'Photo Editor',
+                        position: 'bottom',
                         action: {
                             export: {
                                 show: true,
                                 format: ['image/png']
                             }
                         }
-                    }
+                    },
                 },
                 cropPresetsLibraries: (engine: any) => {
                     const [selectedBlock] = engine.block.findAllSelected();
@@ -84,9 +87,9 @@ const CaseComponent = () => {
     }, []);
 
     return (
-        <div className="cesdkWrapperStyle">
+        <div className="cesdkWrapperStyle h-[90vh] w-[80vw] mx-auto ">
             <CreativeEditor
-                className="cesdkStyle"
+                className="cesdkStyle h-full w-full"
                 style={{
                     // Hide the inspector bar
                     '--ubq-InspectorBar-background': 'var(--ubq-canvas)'

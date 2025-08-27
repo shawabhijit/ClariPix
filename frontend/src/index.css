@@ -178,3 +178,71 @@ body{
         background: linear-gradient(135deg, oklch(0.97 0.005 240), oklch(0.95 0.01 240));
     }
 }
+
+
+.ubq-public {
+    --ubq-canvas: hsl(0, 0%, 0%);
+    --ubq-elevation-1: hsl(0, 0%, 5%);
+    --ubq-elevation-2: hsl(0, 0%, 10%);
+    --ubq-elevation-3: hsl(0, 0%, 20%);
+    --ubq-foreground-default: hsla(0, 0%, 100%, 0.9);
+    --ubq-foreground-light: hsla(0, 0%, 100%, 0.7);
+    --ubq-foreground-info: hsla(0, 0%, 100%, 0.5);
+    --ubq-foreground-active: hsla(0, 0%, 100%, 0.9);
+    --ubq-foreground-accent: hsl(0, 0%, 100%);
+    --ubq-foreground-danger-default: hsl(208 14% 18%);
+    --ubq-foreground-notice-default: hsla(0, 0%, 100%, 0.9);
+    --ubq-interactive-default: hsl(0, 0%, 15%);
+    --ubq-interactive-hover: hsl(0, 0%, 10%);
+    --ubq-interactive-pressed: hsl(0, 0%, 2.5%);
+    --ubq-interactive-selected: hsl(0, 0%, 12.5%);
+    --ubq-interactive-active-default: hsl(0, 0%, 100%);
+    --ubq-interactive-active-hover: hsl(0, 0%, 100%);
+    --ubq-interactive-active-pressed: hsl(0, 0%, 95%);
+    --ubq-interactive-accent-default: hsl(147.69, 74.29%, 27.45%);
+    --ubq-interactive-accent-hover: hsl(147.8, 74.55%, 32.35%);
+    --ubq-interactive-accent-pressed: hsl(147.53, 73.91%, 22.55%);
+    --ubq-interactive-danger-default: hsl(346 98% 81%);
+    --ubq-interactive-danger-hover: hsl(347 100% 88%);
+    --ubq-interactive-danger-pressed: hsl(344 89% 75%);
+    --ubq-interactive-template-default: hsl(273 100% 82%);
+    --ubq-interactive-template-hover: hsl(273 100% 89%);
+    --ubq-interactive-template-pressed: hsl(273 100% 77%);
+    --ubq-interactive-group-default: hsl(0 0% 0% / 0);
+    --ubq-interactive-group-hover: hsl(208 14% 18%);
+    --ubq-interactive-group-active-default: hsl(208 13% 23%);
+    --ubq-interactive-group-active-hover: hsl(208 12% 28%);
+    --ubq-input-default: hsl(0, 0%, 0%);
+    --ubq-input-hover: hsl(0, 0%, 0%);
+    --ubq-border-default: hsla(0, 0%, 50%, 0.1);
+    --ubq-stroke-contrast-1: hsla(0, 0%, 100%, 0.15);
+    --ubq-stroke-contrast-2: hsla(0, 0%, 100%, 0.3);
+    --ubq-stroke-contrast-3: hsl(200 11% 95% / 0.9);
+    --ubq-focus-default: hsl(245.19, 33.29%, 53.3%);
+    --ubq-focus-outline: hsl(0, 0%, 0%);
+    --ubq-overlay: hsl(207 18% 10% / 0.8);
+    --ubq-notice-info: hsl(0, 0%, 100%);
+    --ubq-notice-success: hsl(160.02, 100%, 24.87%);
+    --ubq-notice-warning: hsl(36.78, 70.83%, 32.92%);
+    --ubq-notice-error: hsl(336.84, 43.73%, 47.72%);
+    --ubq-effect-shadow: 0px 1px 2px 0px hsla(0, 0%, 0%, 0.24), 0px 0px 0px 0.5px hsla(0, 0%, 0%, 0.12);
+    --ubq-effect-focus: 0px 1px 2px 0px hsla(0, 0%, 0%, 0.24),
+        0px 0px 0px 0.5px hsla(0, 0%, 0%, 0.12),
+        0px 0px 0px 2px hsl(210 15% 15%),
+        0px 0px 0px 3px hsl(221 100% 80%),
+        0px 0px 0px 7px hsl(221 100% 80% / 0.35);
+    --ubq-progress: hsla(0, 0%, 100%, 0.7);
+    --ubq-static-selection-frame: hsl(230, 100%, 60%);
+    --ubq-static-contrast-white: hsl(0, 0%, 100%);
+    --ubq-static-contrast-black: hsl(0, 0%, 0%);
+    --ubq-static-snapping: hsl(338, 100%, 50%);
+    --ubq-static-bleed: hsl(334, 73%, 43%);
+    --ubq-static-text-variable: hsl(274, 97%, 60%);
+    --ubq-static-card-label-background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0) 14.46%,
+            rgba(0, 0, 0, 0.6) 100%);
+    --ubq-static-card-background: linear-gradient(180deg,
+            hsla(0, 0%, 100%, 0.08),
+            hsla(0, 0%, 0%, 0.08)),
+        hsla(0, 0%, 67%, 0.16);
+}
