@@ -36,7 +36,7 @@ const UserSyncHandler = () => {
                 });
                 console.log("User synced successfully:", response.data);
                 if (response.data.success == true) {
-                    toast.success("User synced successfully");
+                    // toast.success("User synced successfully");
                     console.log('User Successfully created.');
                 }
                 setSynced(true);

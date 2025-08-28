@@ -9,6 +9,7 @@ import UserSyncHandler from "./context/UserSyncHandler"
 // import CaseComponent from "./Editor/CaseComponent"
 import EditorPage from "./pages/EditorPage"
 import AiImageGeneretor from "./pages/AiImageGeneretor"
+import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react"
 
 function App() {
 
@@ -20,8 +21,26 @@ function App() {
         <Toaster />
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/editor" element={<EditorPage />} />
-          <Route path="/ai_image" element={<AiImageGeneretor />} />
+          <Route path="/editor" element={
+            <>
+              <SignedIn>
+                <EditorPage />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
+          <Route path="/ai_image" element={
+            <>
+              <SignedIn>
+                <AiImageGeneretor />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
         </Routes>
         <Footer />
       </div>

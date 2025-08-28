@@ -2,12 +2,18 @@ import { ChevronDown, Eraser, Menu, Palette, RefreshCw, Scissors, X, Zap } from 
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
 import { useState } from "react"
-import { SignedIn, SignedOut, useClerk, UserButton, useUser } from "@clerk/clerk-react"
+import { SignedIn, SignedOut, useAuth, useClerk, UserButton, useUser } from "@clerk/clerk-react"
 
 const Navbar = () => {
 
     const {openSignIn , openSignUp} = useClerk();
-    const {user} = useUser();
+    const {user } = useUser();
+    const {getToken} = useAuth();
+
+    const printToken = async () => {
+        const token = await getToken();
+        console.log("User Token: ", token);
+    }
 
     const openLogedIn = () => {
         setIsMenuOpen(false);
@@ -73,13 +79,13 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    <Link onClick={openLogedIn} to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
                         Editor
                     </Link>
-                    <Link onClick={openLogedIn} to="/ai_image" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link to="/ai_image" className="text-sm font-medium hover:text-primary transition-colors">
                         AI Image
                     </Link>
-                    <Link onClick={openLogedIn} to="/history" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link to="/history" className="text-sm font-medium hover:text-primary transition-colors">
                         History
                     </Link>
                     <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
@@ -88,6 +94,9 @@ const Navbar = () => {
                     <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
                         Contact
                     </Link>
+                    {/* <Button onClick={printToken} variant="link" size="sm" className="text-sm font-medium hover:text-primary transition-colors">
+                        get token
+                    </Button> */}
                 </div>
 
                 {/* Desktop Auth Buttons */}

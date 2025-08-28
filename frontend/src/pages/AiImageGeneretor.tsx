@@ -1,32 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Button } from "@/Components/ui/button"
 import { Card, CardContent } from "@/Components/ui/card"
 import { Input } from "@/Components/ui/input"
 import { Badge } from "@/Components/ui/badge"
-import { Wand2, Download, Heart, Share2, Zap, Palette, Camera, Brush, Stars } from "lucide-react"
+import { Wand2, Download, Heart, Share2, Brush, Stars } from "lucide-react"
+import { AppContext } from "@/context/AppContext"
 
 export default function AIGeneratorPage() {
     const [prompt, setPrompt] = useState("")
-    const [isGenerating, setIsGenerating] = useState(false)
-    const [generatedImages, setGeneratedImages] = useState<string[]>([])
-
-    const handleGenerate = async () => {
-        if (!prompt.trim()) return
-
-        setIsGenerating(true)
-        // Simulate API call
-        setTimeout(() => {
-            setGeneratedImages([
-                "/fantasy-mountains.png",
-                "/futuristic-city-skyline.png",
-                "/digital-portrait.png",
-                "/abstract-colorful-swirls.png",
-            ])
-            setIsGenerating(false)
-        }, 3000)
-    }
+    
+    const {generatedImages , generateImage , isGenerating} = useContext(AppContext) || {}
 
     const exampleImages = [
         {
@@ -97,11 +82,11 @@ export default function AIGeneratorPage() {
                                                 value={prompt}
                                                 onChange={(e:any) => setPrompt(e.target.value)}
                                                 className="h-12 text-white border-1 border-dashed border-gray-700 text-base focus-none transition-colors"
-                                                onKeyDown={(e:any) => e.key === "Enter" && handleGenerate()}
+                                                onKeyDown={(e:any) => e.key === "Enter" && generateImage?.(prompt)}
                                             />
                                         </div>
                                         <Button
-                                            onClick={handleGenerate}
+                                            onClick={() => generateImage?.(prompt)}
                                             disabled={!prompt.trim() || isGenerating}
                                             className="h-12 px-8 gradient-accent text-white border-0 font-semibold"
                                         >
@@ -141,7 +126,7 @@ export default function AIGeneratorPage() {
                         </div>
 
                         {/* Generated Results */}
-                        {generatedImages.length > 0 && (
+                        {generatedImages && generatedImages.length > 0 && (
                             <div className="max-w-4xl mx-auto">
                                 <h3 className="font-heading font-semibold text-xl mb-6">Your Generated Images</h3>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
