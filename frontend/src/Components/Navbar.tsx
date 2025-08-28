@@ -76,6 +76,9 @@ const Navbar = () => {
                     <Link onClick={openLogedIn} to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
                         Editor
                     </Link>
+                    <Link onClick={openLogedIn} to="/ai_image" className="text-sm font-medium hover:text-primary transition-colors">
+                        AI Image
+                    </Link>
                     <Link onClick={openLogedIn} to="/history" className="text-sm font-medium hover:text-primary transition-colors">
                         History
                     </Link>

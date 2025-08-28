@@ -6,7 +6,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-body{
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -176,6 +176,18 @@ body{
 
     .gradient-card {
         background: linear-gradient(135deg, oklch(0.97 0.005 240), oklch(0.95 0.01 240));
+    }
+
+    .gradient-hero {
+        background: linear-gradient(135deg, #0891b2 0%, #8b5cf6 100%);
+    }
+
+    .gradient-button {
+        background: linear-gradient(135deg, #0891b2 0%, #0ea5e9 100%);
+    }
+
+    .gradient-purple {
+        background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
     }
 }
 

@@ -8,6 +8,7 @@ import UserSyncHandler from "./context/UserSyncHandler"
 // import DesignEditor from "./Components/Editor"
 // import CaseComponent from "./Editor/CaseComponent"
 import EditorPage from "./pages/EditorPage"
+import AiImageGeneretor from "./pages/AiImageGeneretor"
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/editor" element={<EditorPage />} />
+          <Route path="/ai_image" element={<AiImageGeneretor />} />
         </Routes>
         <Footer />
       </div>

@@ -3,7 +3,11 @@
 import { initPhotoEditorUIConfig } from './PhotoEditorConfig';
 import CreativeEditor, { useConfig, useConfigure } from './lib/CreativeEditor';
 
-const CaseComponent = () => {
+const CaseComponent = ({image} : {image: string | null | File}) => {
+
+    if (!image) {
+        return <div className="min-h-screen flex items-center justify-center text-gray-500">No image provided</div>;
+    }
     const config = useConfig(
         () => ({
             role: 'Adopter',
@@ -31,7 +35,7 @@ const CaseComponent = () => {
                     },
                     navigation: {
                         // title: 'Photo Editor',
-                        position: 'bottom',
+                        position: "bottom",
                         action: {
                             export: {
                                 show: true,
@@ -76,7 +80,7 @@ const CaseComponent = () => {
             // This function should handle scene creation internally
             await initPhotoEditorUIConfig(
                 instance,
-                'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&dl=dom-hill-nimElTcTNyY-unsplash.jpg&w=1920'
+                image,
             );
 
             console.log('Photo editor configured successfully');
@@ -87,7 +91,7 @@ const CaseComponent = () => {
     }, []);
 
     return (
-        <div className="cesdkWrapperStyle h-[90vh] w-[80vw] mx-auto ">
+        <div className="cesdkWrapperStyle h-[100vh] w-[95vw] md:h-[90vh] md:w-[80vw] mx-auto ">
             <CreativeEditor
                 className="cesdkStyle h-full w-full"
                 style={{
