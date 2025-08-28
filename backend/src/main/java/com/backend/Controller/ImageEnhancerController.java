@@ -28,7 +28,7 @@ public class ImageEnhancerController {
     private final ImageEnhanceAIService imageEnhanceAIService;
     private final UserService userService;
 
-    @PostMapping("remove-background")
+    @PostMapping("/remove-background")
     public ResponseEntity<?> removeBackground(@RequestParam("file") MultipartFile file , Authentication authentication) {
         RemoveBgResponse response = null;
         Map<String , Object> responseMap = new HashMap<>();

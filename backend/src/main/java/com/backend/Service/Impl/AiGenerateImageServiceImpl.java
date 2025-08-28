@@ -2,15 +2,13 @@ package com.backend.Service.Impl;
 
 import com.backend.Client.PicsartClient;
 import com.backend.Request.PicsartRequest;
+import com.backend.Response.PicsartAiGeneratePostResponse;
+import com.backend.Response.PicsartDataAIGenerateResponse;
+import com.backend.Response.PicsartResponse;
 import com.backend.Service.AiGenerateImageService;
-import com.backend.Service.ImageEnhanceAIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +20,13 @@ public class AiGenerateImageServiceImpl implements AiGenerateImageService {
     private final PicsartClient picsartClient;
 
     @Override
-    public List<String> generateTextToImage(PicsartRequest request) {
+    public PicsartAiGeneratePostResponse generateTextToImage(PicsartRequest request) {
         return picsartClient.textToImage(picsartApiKey , request);
+    }
+
+    @Override
+    public PicsartResponse getGeneratedImages(String inference_id) {
+        return picsartClient.getText2Image(picsartApiKey , inference_id);
     }
 
 

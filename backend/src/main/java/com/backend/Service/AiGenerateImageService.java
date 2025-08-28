@@ -1,6 +1,9 @@
 package com.backend.Service;
 
 import com.backend.Request.PicsartRequest;
+import com.backend.Response.PicsartAiGeneratePostResponse;
+import com.backend.Response.PicsartDataAIGenerateResponse;
+import com.backend.Response.PicsartResponse;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.File;
@@ -8,5 +11,7 @@ import java.util.List;
 
 public interface AiGenerateImageService {
 
-    List<String> generateTextToImage(PicsartRequest request);
+    PicsartAiGeneratePostResponse generateTextToImage(PicsartRequest request);
+
+    PicsartResponse getGeneratedImages(String inference_id);
 }
