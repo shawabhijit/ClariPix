@@ -7,8 +7,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.util.List;
 
 @FeignClient(name = "picsartClient" , url="https://genai-api.picsart.io/v1")
 public interface PicsartClient {

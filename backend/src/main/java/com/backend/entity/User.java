@@ -1,10 +1,10 @@
 package com.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+
+
 
 @Entity
 @Table(name = "tbl_users")
@@ -13,14 +13,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;   // <- Primary key in DB
+
     @Column(unique = true, nullable = false)
-    private String clerkId;
+    private String clerkId; // external id from Clerk
+
     @Column(unique = true, nullable = false)
     private String email;
+
     private String firstName;
     private String lastName;
     private Integer credits;
@@ -33,3 +35,5 @@ public class User {
         }
     }
 }
+
+

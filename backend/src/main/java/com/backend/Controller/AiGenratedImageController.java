@@ -1,15 +1,12 @@
 package com.backend.Controller;
 
 import com.backend.Request.PicsartRequest;
-import com.backend.Response.PicsartAiGeneratePostResponse;
 import com.backend.Service.AiGenerateImageService;
-import com.backend.Service.Impl.AiGenerateImageServiceImpl;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
