@@ -83,14 +83,9 @@ export default function AIGeneratorPage() {
     }
 
     // Optional: download handler (used by popover action)
-    const handleDownload = (url: string) => {
+    const handleOpenImage = (url: string) => {
         if (!url) return
-        const a = document.createElement("a")
-        a.href = url
-        a.download = `image-${Date.now()}.png`
-        document.body.appendChild(a)
-        a.click()
-        a.remove()
+        window.open(url, "_blank", "noopener,noreferrer")
     }
 
     return (
@@ -207,7 +202,7 @@ export default function AIGeneratorPage() {
                                                             <Button
                                                                 size="sm"
                                                                 variant="secondary"
-                                                                className="bg-secondary/10 text-black hover:bg-secondary/30 cursor-pointer"
+                                                                className="bg-primary text-black hover:bg-secondary/30 cursor-pointer"
                                                             >
                                                                 <EllipsisVertical className="w-4 h-4" />
                                                             </Button>
@@ -221,7 +216,7 @@ export default function AIGeneratorPage() {
                                                             className="w-48 p-2 z-50 gradient-accent border border-border rounded-lg shadow-lg text-white"
                                                         >
                                                             <button
-                                                                onClick={() => handleDownload(image)}
+                                                                onClick={() => handleOpenImage(image)}
                                                                 className="w-full flex items-center gap-3 p-2 rounded-md hover:bg-primary/30 transition-colors text-left"
                                                             >
                                                                 <Download className="w-4 h-4" />

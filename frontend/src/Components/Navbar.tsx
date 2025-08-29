@@ -1,14 +1,17 @@
 import { ChevronDown, Eraser, Menu, Palette, RefreshCw, Scissors, X, Zap } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { SignedIn, SignedOut, useAuth, useClerk, UserButton, useUser } from "@clerk/clerk-react"
+import { AppContext } from "@/context/AppContext"
 
 const Navbar = () => {
 
     const {openSignIn , openSignUp} = useClerk();
     const {user } = useUser();
     const {getToken} = useAuth();
+
+    const {setEditImage} = useContext(AppContext) || {}
 
     const printToken = async () => {
         const token = await getToken();
@@ -79,7 +82,7 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    <Link to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link onClick={() => setEditImage?.(null)} to="/editor" className="text-sm font-medium hover:text-primary transition-colors">
                         Editor
                     </Link>
                     <Link to="/ai_image" className="text-sm font-medium hover:text-primary transition-colors">
