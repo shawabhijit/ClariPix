@@ -59,7 +59,7 @@ const Navbar = () => {
                         </button>
 
                         {isAiToolsOpen && (
-                            <div className="absolute top-full left-0 mt-1 w-64 bg-background border border-border rounded-lg shadow-lg p-2">
+                            <div className="absolute top-full left-[-10px] mt-[3px] w-64 bg-background border border-border rounded-lg shadow-lg p-2">
                                 {aiTools.map((tool, index) => {
                                     const Icon = tool.icon
                                     return (
