@@ -88,12 +88,11 @@ const Navbar = () => {
                     <Link to="/ai_image" className="text-sm font-medium hover:text-primary transition-colors">
                         AI Image
                     </Link>
-                    <Link to="/history" className="text-sm font-medium hover:text-primary transition-colors">
-                        History
-                    </Link>
-                    <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-                        About
-                    </Link>
+                    <SignedIn>
+                        <Link to="/history" className="text-sm font-medium hover:text-primary transition-colors">
+                            History
+                        </Link>
+                    </SignedIn>
                     <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
                         Contact
                     </Link>
@@ -138,14 +137,6 @@ const Navbar = () => {
                                 {user?.fullName}
                             </p>
                         </div>
-                        <Link
-                            to="/editor"
-                            className="block text-sm font-medium hover:text-primary transition-colors"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            Editor
-                        </Link>
-
                         <div className="space-y-2">
                             <span className="block text-sm font-medium text-muted-foreground">AI Tools</span>
                             {aiTools.map((tool, index) => {
@@ -165,34 +156,26 @@ const Navbar = () => {
                                 )
                             })}
                         </div>
-
+                        <Link
+                            to="/editor"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Editor
+                        </Link>
+                        <Link
+                            to="/ai_image"
+                            className="block text-sm font-medium hover:text-primary transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            AI Image
+                        </Link>
                         <Link
                             to="/history"
                             className="block text-sm font-medium hover:text-primary transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             History
-                        </Link>
-                        <Link
-                            to="/reviews"
-                            className="block text-sm font-medium hover:text-primary transition-colors"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            Reviews
-                        </Link>
-                        <Link
-                            to="/faq"
-                            className="block text-sm font-medium hover:text-primary transition-colors"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            FAQ
-                        </Link>
-                        <Link
-                            to="/about"
-                            className="block text-sm font-medium hover:text-primary transition-colors"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            About
                         </Link>
                         <Link
                             to="/contact"

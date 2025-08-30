@@ -17,7 +17,7 @@ export default function AIGeneratorPage() {
     const [prompt, setPrompt] = useState("")
     const [openIndex, setOpenIndex] = useState<number | null>(null)
 
-    const {editImage, setEditImage} = useContext(AppContext) || {}
+    const {editImage, setEditImage , saveUserHistory} = useContext(AppContext) || {}
 
     const handleEditImage = (index: number | null) => {
         const imageUrl = index !== null && generatedImages && generatedImages.length > index ? generatedImages[index] as string : null;
@@ -35,45 +35,45 @@ export default function AIGeneratorPage() {
 
     const exampleImages = [
         {
-            src: "/fantasy-dragon-landscape.png",
+            src: "https://res.cloudinary.com/dvkvr88db/image/upload/v1756501834/fantasy-dragon-landscape_1_jz58la.png",
             caption: "Fantasy Landscape",
             prompt: "Mystical forest with glowing trees and magical creatures",
         },
         {
-            src: "/futuristic-cyberpunk-city.png",
+            src: "https://res.cloudinary.com/dvkvr88db/image/upload/v1756502011/futuristic-cyberpunk-city_ovebjr.png",
             caption: "Futuristic City",
             prompt: "Neon-lit cyberpunk cityscape with flying cars",
         },
         {
-            src: "/digital-portrait-woman.png",
+            src: "https://res.cloudinary.com/dvkvr88db/image/upload/v1756502007/digital-portrait-woman_fmadpk.png",
             caption: "Digital Portrait",
             prompt: "Beautiful woman with flowing hair, digital art style",
         },
         {
-            src: "/abstract-geometric-art.png",
+            src: "https://res.cloudinary.com/dvkvr88db/image/upload/v1756502007/abstract-geometric-art_vfbafc.png",
             caption: "Abstract Art",
             prompt: "Colorful geometric shapes with gradient backgrounds",
         },
         {
-            src: "/space-nebula-stars.png",
+            src: "https://res.cloudinary.com/dvkvr88db/image/upload/v1756502007/space-nebula-stars_x1sf44.png",
             caption: "Space Scene",
             prompt: "Cosmic nebula with bright stars and planets",
         },
         {
-            src: "/vintage-car-illustration.png",
+            src: "https://res.cloudinary.com/dvkvr88db/image/upload/v1756502007/vintage-car-illustration_aydr5t.png",
             caption: "Vintage Style",
             prompt: "Classic car in retro illustration style",
         },
     ]
 
-    const inference_id = "236efc0c-b2cc-454c-a47a-4766c6015c07"
-    const { getToken } = useAuth()
+    //const inference_id = "236efc0c-b2cc-454c-a47a-4766c6015c07"
+    //const { getToken } = useAuth()
     const tempArr: string[] = []
 
-    const handleGetImages = async () => {
-        const token = await getToken()
-        getAIGeneratedImages?.(inference_id, token)
-    }
+    // const handleGetImages = async () => {
+    //     const token = await getToken()
+    //     getAIGeneratedImages?.(inference_id, token)
+    // }
 
     if (generatedImages && generatedImages.length > 0) {
         // Demo filler: repeat first image 3x for the grid
@@ -87,6 +87,7 @@ export default function AIGeneratorPage() {
         if (!url) return
         window.open(url, "_blank", "noopener,noreferrer")
     }
+    
 
     return (
         <div className="min-h-screen bg-background">
@@ -146,12 +147,12 @@ export default function AIGeneratorPage() {
                                                 </>
                                             )}
                                         </Button>
-                                        <Button
+                                        {/* <Button
                                             onClick={handleGetImages}
                                             className="h-12 px-8 bg-gray-800 text-white border-0 font-semibold"
                                         >
                                             Get Images
-                                        </Button>
+                                        </Button> */}
                                     </div>
 
                                     {/* Quick Prompts */}
@@ -207,8 +208,6 @@ export default function AIGeneratorPage() {
                                                                 <EllipsisVertical className="w-4 h-4" />
                                                             </Button>
                                                         </PopoverTrigger>
-
-                                                        {/* Portal-based content: not clipped by overflow */}
                                                         <PopoverContent
                                                             align="end"
                                                             side="left"
@@ -224,6 +223,7 @@ export default function AIGeneratorPage() {
                                                             </button>
 
                                                             <Link
+                                                                onClick={() => saveUserHistory?.({image: image as string, sorceType: "AI Generated"})}
                                                                 to=""
                                                                 className="flex items-center gap-3 p-2 rounded-md hover:hover:bg-primary/30 transition-colors"
                                                             >
@@ -267,7 +267,7 @@ export default function AIGeneratorPage() {
                         {exampleImages.map((example, index) => (
                             <Card
                                 key={index}
-                                className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                                className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer p-0 rounded-lg"
                                 onClick={() => setPrompt(example.prompt)}
                             >
                                 <CardContent className="p-0">
@@ -285,7 +285,7 @@ export default function AIGeneratorPage() {
                                             <p className="text-white/80 text-sm line-clamp-2">{example.prompt}</p>
                                         </div>
                                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Button size="sm" className="gradient-button text-white border-0">
+                                            <Button size="sm" className="gradient-primary cursor-pointer text-white border-0">
                                                 <Brush className="w-4 h-4 mr-1" />
                                                 Use Prompt
                                             </Button>

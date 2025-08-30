@@ -10,6 +10,7 @@ import UserSyncHandler from "./context/UserSyncHandler"
 import EditorPage from "./pages/EditorPage"
 import AiImageGeneretor from "./pages/AiImageGeneretor"
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react"
+import History from "./pages/History"
 
 function App() {
 
@@ -41,7 +42,18 @@ function App() {
               </SignedOut>
             </>
           } />
+          <Route path="/history" element={
+            <>
+              <SignedIn>
+                <History />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
         </Routes>
+        
         <Footer />
       </div>
     </>

@@ -19,6 +19,11 @@ type AppContextType = {
     setIsGenerating?: Dispatch<SetStateAction<boolean>>;
     editImage?: string | null;
     setEditImage?: Dispatch<SetStateAction<string | null>>;
+    history?: any[];
+    setHistory?: Dispatch<SetStateAction<any[]>>;
+    getAllUserHistory?: () => {};
+    saveUserHistory?: ({image, sorceType}: {image: string,sorceType: string}) => {};
+    deleteUserHistory?: (image: string) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -30,14 +35,14 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [image, setImage] = useState<boolean | File>(false);
     const [resultImage, setResultImage] = useState<string | boolean>(false);
-    const [generatedImages, setGeneratedImages] = useState<string[]>([])
-    const [isGenerating, setIsGenerating] = useState(false)
-
+    const [generatedImages, setGeneratedImages] = useState<string[]>([]);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [editImage, setEditImage] = useState<string | null>(null);
+    const [history, setHistory] = useState<any[]>([]);
 
     const { openSignIn } = useClerk();
     const { getToken } = useAuth();
-    const { isSignedIn } = useUser();
+    const { isSignedIn, user } = useUser();
 
     const navigate = useNavigate();
 
@@ -133,6 +138,92 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+    const getAllUserHistory = async () => {
+        try {
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+
+            const token = await getToken();
+
+            const response = await axios.get(backendUrl + `/history/get?clerkId=${user?.id}` , {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            //console.log("User history ..", response.data);
+            setHistory(response.data);
+        }
+        catch (error) {
+            console.error("Error fetching user history:", error);
+            toast.error("Error fetching user history. Please try again.");
+        }
+    }
+
+    const saveUserHistory = async ({image, sorceType}: {image: string,sorceType: string}) => {
+        try {
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+
+            const token = await getToken();
+
+            const imageType = image.endsWith('png') ? 'png' : 'jpg';
+
+            const response = await axios.post(backendUrl + `/history/save_image`, {
+                clerkId: user?.id,
+                image: image,
+                imageType: imageType,
+                sourceType: sorceType,
+            } , {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            if (response.status === 200) {
+                console.log("Saved user history ..", response.data);
+                toast.success("Image saved to history.");
+            }
+            else {
+                toast.error("Error saving image. Please try again.");
+            }
+        }
+        catch (error) {
+            console.error("Error saving user history:", error);
+            toast.error("Error saving user history. Please try again.");
+        }
+    }
+
+    const deleteUserHistory = async (image: string) => {
+        try {
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+            const token = await getToken();
+            const response = await axios.delete(backendUrl + `/history/delete?image=${image}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            if (response.status === 200) {
+                console.log("Deleted user history ..", response.data);
+                // Update the local history state by removing the deleted image
+                setHistory((prevHistory) => prevHistory?.filter((item) => item.image !== image) || []);
+                toast.success("Image deleted from history.");
+            }
+            else {
+                toast.error("Error deleting image. Please try again.");
+            }
+        }
+        catch (error) {
+            console.error("Error deleting user history:", error);
+            toast.error("Error deleting user history. Please try again.");
+        }
+    }
+
     const contextValue: AppContextType = {
         backendUrl,
         image,
@@ -148,6 +239,11 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         setIsGenerating,
         editImage,
         setEditImage,
+        history,
+        setHistory,
+        getAllUserHistory,
+        saveUserHistory,
+        deleteUserHistory,
     };
 
     return (
@@ -167,14 +263,14 @@ export default AppContextProvider;
 /*
 
 {
-  "status": "FINISHED",
-  "data": [
-    {
-      "id": "fa7baebf-f97d-481f-adac-c05abd087f58",
-      "url": "https://aicdn.picsart.com/4ed5ec5b-e1d3-49f1-8b10-b32a352fb12c.jpg",
-      "status": "DONE"
-    }
-  ]
+    "status": "FINISHED",
+    "data": [
+        {
+            "id": "fa7baebf-f97d-481f-adac-c05abd087f58",
+            "url": "https://aicdn.picsart.com/4ed5ec5b-e1d3-49f1-8b10-b32a352fb12c.jpg",
+            "status": "DONE"
+        }
+    ]
 }
 
 
