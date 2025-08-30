@@ -64,4 +64,8 @@ public class HistoryServiceImpl {
                 .sourceType(history.getSourceType())
                 .build();
     }
+
+    public void deleteHistory(History history) {
+        historyRepo.delete(history);
+    }
 }

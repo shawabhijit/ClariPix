@@ -1,5 +1,6 @@
 package com.backend.Controller;
 
+import com.backend.Repository.HistoryRepo;
 import com.backend.Repository.UserRepo;
 import com.backend.Request.HistoryRequest;
 import com.backend.Response.HistoryResponse;
@@ -21,6 +22,7 @@ public class HistoryController {
 
     private final HistoryServiceImpl historyService;
     private final UserRepo userRepo;
+    private final HistoryRepo historyRepo;
 
     @PostMapping("/save_image")
     public ResponseEntity<?> saveHistory(@RequestBody HistoryRequest request) throws Exception {
@@ -78,6 +80,16 @@ public class HistoryController {
         return ResponseEntity.ok().body(historyResponse);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteHistory(@RequestParam String image) {
+        History history = historyRepo.findHistoryByImage(image);
+        if (history == null) {
+            throw new UsernameNotFoundException("History not found in the dataBase");
+        }
+        historyService.deleteHistory(history);
+        return ResponseEntity.ok().body("History deleted successfully");
+    }
+
     static HistoryResponse mapToHistoryResponse(History history) {
         return HistoryResponse.builder()
                 .image(history.getImage())
@@ -85,4 +97,5 @@ public class HistoryController {
                 .imageType(history.getImageType())
                 .build();
     }
+
 }
