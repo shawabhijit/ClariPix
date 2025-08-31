@@ -74,6 +74,8 @@ function App() {
               </SignedOut>
             </>
           } />
+
+          
         </Routes>
         
         <Footer />

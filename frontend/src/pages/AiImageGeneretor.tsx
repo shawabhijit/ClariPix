@@ -8,7 +8,6 @@ import { Badge } from "@/Components/ui/badge"
 import { Popover, PopoverTrigger, PopoverContent } from "@/Components/ui/popover"
 import { Wand2, Download, Brush, Stars, EllipsisVertical, Edit, Save } from "lucide-react"
 import { AppContext } from "@/context/AppContext"
-import { useAuth } from "@clerk/clerk-react"
 import { Link, useNavigate } from "react-router-dom"
 
 export default function AIGeneratorPage() {
@@ -17,7 +16,7 @@ export default function AIGeneratorPage() {
     const [prompt, setPrompt] = useState("")
     const [openIndex, setOpenIndex] = useState<number | null>(null)
 
-    const {editImage, setEditImage , saveUserHistory} = useContext(AppContext) || {}
+    const { setEditImage , saveUserHistory} = useContext(AppContext) || {}
 
     const handleEditImage = (index: number | null) => {
         const imageUrl = index !== null && generatedImages && generatedImages.length > index ? generatedImages[index] as string : null;

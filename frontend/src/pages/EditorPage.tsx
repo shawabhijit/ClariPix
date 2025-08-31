@@ -8,6 +8,7 @@ const EditorPage = () => {
     const {editImage, setEditImage} = useContext(AppContext) || {}
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditImage?.(null) // reset previous image
         const file = e.target.files?.[0]
         if (file) {
             const reader = new FileReader()

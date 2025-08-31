@@ -4,6 +4,7 @@ import { Download, Save, Edit3, ArrowLeft, Sparkles, Plus } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import toast from "react-hot-toast";
 import { AppContext } from "@/context/AppContext";
+import { base64ToFile, uploadToCloudninary } from "@/util/Cloudinary";
 
 export const ResultPage = () => {
 
@@ -16,6 +17,7 @@ export const ResultPage = () => {
     const appContext = useContext(AppContext);
     const resultImage = appContext?.resultImage;
 
+    //console.log("Result Image:", resultImage);
 
     // Background options
     const colorBackgrounds = [
@@ -48,26 +50,58 @@ export const ResultPage = () => {
     }, [navigate, resultImage]);
 
 
-    const handleSave = () => {
-        // This would integrate with Clerk auth
-        toast.success("Image saved to your history!");
+    const handleSave = async () => {
+        if (!resultImage || !appContext) return;
+        const file = base64ToFile(resultImage as string, "bg-removed.png");
+        //console.log("Converted File:", file);
+        if (!file) {
+            return toast.error("Failed to convert image for saving.");
+        }
+        const url = await uploadToCloudninary(file);
+        //console.log("Uploaded Image URL:", url);
+        if (!url) {
+            return toast.error("Failed to upload image. Please try again.");
+        }
+        appContext?.saveUserHistory?.({ image: url , sorceType: "bg-remove" });
     };
 
     const handleEdit = () => {
-        // This would integrate with Filerobot Editor
+        if (!resultImage || !appContext) return;
+        appContext?.setEditImage?.(null);
+        if (resultImage) {
+            appContext.setEditImage?.(resultImage as string);
+            navigate("/editor");
+        }
         toast("Opening editor...", { icon: "🖌️" });
     };
 
 
     //Download processed image
     const handleDownloadImage = () => {
-        if (!resultImage) return;
-        const link = document.createElement('a');
-        link.href = resultImage as string;
-        link.download = 'background-removed.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = resultImage as string;
+
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Fill background color
+            ctx!.fillStyle = selectedBackground;
+            ctx!.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw transparent image on top
+            ctx!.drawImage(img, 0, 0);
+
+            // Download
+            const link = document.createElement("a");
+            link.download = "background-changed.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        };
     };
 
     return (
