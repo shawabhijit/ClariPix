@@ -32,7 +32,7 @@ const Navbar = () => {
     const [isAiToolsOpen, setIsAiToolsOpen] = useState(false);
 
     const aiTools = [
-        { name: "Remove Background", icon: Scissors, href: "/editor?tool=remove-bg" },
+        { name: "Remove Background", icon: Scissors, href: "/remove-bg" },
         { name: "Change Background", icon: Palette, href: "/editor?tool=change-bg" },
         { name: "Enhance Resolution", icon: Zap, href: "/editor?tool=enhance-resolution" },
         { name: "Remove Objects", icon: Eraser, href: "/editor?tool=remove-objects" },

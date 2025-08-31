@@ -11,6 +11,8 @@ import EditorPage from "./pages/EditorPage"
 import AiImageGeneretor from "./pages/AiImageGeneretor"
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react"
 import History from "./pages/History"
+import ImageBgRemover from "./pages/BgRemove"
+import ResultPage from "./pages/ResultPage"
 
 function App() {
 
@@ -46,6 +48,26 @@ function App() {
             <>
               <SignedIn>
                 <History />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
+          <Route path="/remove-bg" element={
+            <>
+              <SignedIn>
+                <ImageBgRemover />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
+          <Route path="/ai/result" element={
+            <>
+              <SignedIn>
+                <ResultPage />
               </SignedIn>
               <SignedOut>
                 <RedirectToSignIn />

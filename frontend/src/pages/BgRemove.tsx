@@ -1,100 +1,91 @@
-import axios from "axios";
-import React, { useContext, useState } from "react";
-// import { AppContext } from "../context/AppContext";
+import { ImageUpload } from "@/Components/ImageUpload";
+import { AppContext } from "@/context/AppContext";
+import { Shield, Sparkles, Zap } from "lucide-react";
+import React, { useContext, useEffect, useState } from "react";
 
 const ImageBgRemover: React.FC = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [processedImage, setProcessedImage] = useState<string | null>(null);
 
-    // const {image , resultImage} = useContext<any>(AppContext);
+    const features = [
+        {
+            icon: Sparkles,
+            title: "AI-Powered Precision",
+            description: "Advanced AI algorithms detect and remove backgrounds with pixel-perfect accuracy"
+        },
+        {
+            icon: Zap,
+            title: "Lightning Fast",
+            description: "Process images in seconds, not minutes. Get professional results instantly"
+        },
+        {
+            icon: Shield,
+            title: "Privacy First",
+            description: "Your images are processed securely and never stored on our servers"
+        }
+    ];
+
+
+    const { removeBg } = useContext<any>(AppContext);
 
     // Handle file select
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            setSelectedImage(file);
-            setProcessedImage(null); // reset
+    const handleImageChange = (file: File) => {
+        setSelectedImage(file);
+        setProcessedImage(null); // reset
+    };
+
+    useEffect(() => {
+        if (selectedImage) {
+            removeBg(selectedImage);
         }
-    };
-
-    // Mock function for background removal
-    const handleRemoveBackground = async () => {
-        if (!selectedImage) return;
-        const formData = new FormData();
-        selectedImage && formData.append("file", selectedImage);
-
-        const { data: base64Image } = await axios.post("http://localhost:8080/api/v1/remove-background", formData);
-        setProcessedImage(`data:image/png;base64,${base64Image}`);
-    };
-
-    // Download processed image
-    const handleDownloadImage = () => {
-        if (!processedImage) return;
-        const link = document.createElement('a');
-        link.href = processedImage;
-        link.download = 'background-removed.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+    }, [selectedImage]);
 
     return (
-        <div className="min-h-screen flex gap-10 items-center justify-center bg-gray-900 text-white p-6">
-            <div>
-                <h1 className="text-3xl font-bold mb-6">ClariPix - Background Remover</h1>
+        <div className="min-h-screen relative pattern-bg">
+            <div className="container mx-auto px-4 py-8">
+                {/* Main Content */}
+                <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto mt-34">
+                    {/* Left Side - Content */}
+                    <div className="space-y-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                        <div className="space-y-4">
+                            <h2 className="text-4xl bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent md:text-5xl font-bold leading-tight">
+                                Remove backgrounds instantly with AI
+                            </h2>
+                            <p className="text-lg text-muted-foreground">
+                                Transform your images with our AI-powered background removal tool.
+                                Perfect for e-commerce, social media, and professional photography.
+                            </p>
+                        </div>
 
-                {/* File Input */}
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="mb-4 text-sm"
-                />
-
-                {/* Selected Image Preview */}
-                {selectedImage && (
-                    <div className="mb-6">
-                        <h2 className="text-lg font-semibold mb-2">Original Image</h2>
-                        <div className="w-[600px] h-[400px] border-2 border-green-500 rounded-lg overflow-hidden shadow-lg">
-                            <img
-                                src={URL.createObjectURL(selectedImage)}
-                                alt="Selected"
-                                className="w-full h-full object-contain bg-white"
-                            />
+                        {/* Features List */}
+                        <div className="space-y-4">
+                            {features.map((feature, index) => (
+                                <div
+                                    key={feature.title}
+                                    className="flex items-start space-x-4 p-4 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors"
+                                    style={{ animationDelay: `${0.4 + index * 0.1}s` }}
+                                >
+                                    <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
+                                        <feature.icon className="w-5 h-5 text-white " />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-foreground">{feature.title}</h3>
+                                        <p className="text-sm text-muted-foreground">{feature.description}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                )}
 
-                {/* Remove Background Button */}
-                {selectedImage && (
-                    <button
-                        onClick={handleRemoveBackground}
-                        className="px-6 py-2 bg-green-600 hover:bg-green-500 rounded-lg font-semibold shadow-md transition-all duration-300"
-                    >
-                        Remove Background
-                    </button>
-                )}
-            </div>
-
-            {/* Processed Image Preview */}
-            {processedImage && (
-                <div className="mt-6">
-                    <h2 className="text-lg font-semibold mb-2">Background Removed</h2>
-                    <div className="w-[600px] h-[400px] border-2 border-blue-500 rounded-lg overflow-hidden shadow-lg">
-                        <img
-                            src={processedImage}
-                            alt="Processed"
-                            className="w-full h-full object-contain bg-white"
+                    {/* Right Side - Upload */}
+                    <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+                        <ImageUpload
+                            onImageSelect={handleImageChange}
+                            selectedImage={selectedImage}
                         />
                     </div>
-                    <button
-                        onClick={handleDownloadImage}
-                        className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold shadow-md transition-all duration-300"
-                    >
-                        Download Image
-                    </button>
                 </div>
-            )}
+            </div>
         </div>
     );
 };

@@ -56,7 +56,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             setImage(selectedImage);
             setResultImage(false);
 
-            // navigate("/result");
+            navigate("/ai/result");
 
             const token = await getToken();
             const formData = new FormData();
