@@ -2,10 +2,14 @@ import { ImageUpload } from "@/Components/ImageUpload";
 import { AppContext } from "@/context/AppContext";
 import { Shield, Sparkles, Zap } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ImageBgRemover: React.FC = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [processedImage, setProcessedImage] = useState<string | null>(null);
+
+    const location = useLocation();
+    
 
     const features = [
         {
@@ -25,8 +29,9 @@ const ImageBgRemover: React.FC = () => {
         }
     ];
 
+    const navigate = useNavigate();
 
-    const { removeBg } = useContext<any>(AppContext);
+    const { removeBg , setImage} = useContext<any>(AppContext);
 
     // Handle file select
     const handleImageChange = (file: File) => {
@@ -35,26 +40,49 @@ const ImageBgRemover: React.FC = () => {
     };
 
     useEffect(() => {
-        if (selectedImage) {
+        if (selectedImage && location.pathname === "/remove-bg") {
             removeBg(selectedImage);
         }
-    }, [selectedImage]);
+        else if (location.pathname === "/change-background" && selectedImage) {
+            setImage(null);
+            setImage(selectedImage);
+            navigate("/ai/result");
+        }
+    }, [selectedImage , location]);
 
     return (
         <div className="min-h-screen relative pattern-bg">
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4">
                 {/* Main Content */}
-                <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto mt-34">
+                <div className="grid lg:grid-cols-2 gap-20 items-center max-w-6xl mx-auto mt-30">
                     {/* Left Side - Content */}
                     <div className="space-y-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
                         <div className="space-y-4">
-                            <h2 className="text-4xl bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent md:text-5xl font-bold leading-tight">
-                                Remove backgrounds instantly with AI
-                            </h2>
-                            <p className="text-lg text-muted-foreground">
-                                Transform your images with our AI-powered background removal tool.
-                                Perfect for e-commerce, social media, and professional photography.
-                            </p>
+                            {
+                                location.pathname === "/remove-bg" && (
+                                    <>
+                                        <h2 className="text-4xl bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent md:text-5xl font-bold leading-tight">
+                                            Remove backgrounds instantly with AI
+                                        </h2>
+                                        <p className="text-lg text-muted-foreground">
+                                            Transform your images with our AI-powered background removal tool.
+                                            Perfect for e-commerce, social media, and professional photography.
+                                        </p>
+                                    </>
+                                )
+                            }
+                            {
+                                location.pathname === "/change-background" && (
+                                    <>
+                                        <h2 className="text-4xl bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent md:text-5xl font-bold leading-tight">
+                                            Change Background Online Free with AI
+                                        </h2>
+                                        <p className="text-lg text-muted-foreground">
+                                            Easily change the background of any image and add custom background photos. Need a quick white background remover? Or want to change the background color of the image to bold, clean colors? With ClariPix background changer, it only takes seconds.
+                                        </p>
+                                    </>
+                                )
+                            }
                         </div>
 
                         {/* Features List */}

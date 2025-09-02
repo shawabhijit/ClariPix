@@ -1,12 +1,13 @@
 import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
 import axios from "axios";
+import type { IncomingMessage } from "node:http";
 import { createContext, useState, type Dispatch, type SetStateAction } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 type AppContextType = {
     backendUrl: string,
-    image: File | boolean;
+    image: any;
     setImage: Dispatch<SetStateAction<File | boolean>>;
     resultImage: string | boolean;
     setResultImage: Dispatch<SetStateAction<string | boolean>>;
@@ -24,6 +25,7 @@ type AppContextType = {
     getAllUserHistory?: () => {};
     saveUserHistory?: ({image, sorceType}: {image: string,sorceType: string}) => {};
     deleteUserHistory?: (image: string) => {};
+    bgChnageUsingPrompt?: (selectedImage : any , prompt : string | null) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -76,6 +78,36 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
         catch (error) {
             console.error("Error removing background:", error);
+        }
+    }
+
+    const bgChnageUsingPrompt = async (selectedImage:any , prompt : string|null) => {
+        try {
+
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+
+            setImage(selectedImage);
+            setResultImage(false);
+
+            const token = await getToken();
+
+            const formdata = new FormData();
+            selectedImage && formdata.append("file" , selectedImage);
+            prompt && formdata.append("prompt" , prompt);
+
+            const { data: base64Image } = await axios.post(backendUrl + "/images/replace-background_prompt" , formdata , {
+                headers : {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+
+            setResultImage(`data:image/png;base64,${base64Image}`);
+        }
+        catch (error) {
+            console.error("Error changing background by prompt:", error);
+            toast.error("Error changing background by pormpt , kindly use your personal background.")
         }
     }
 
@@ -224,6 +256,8 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+
+
     const contextValue: AppContextType = {
         backendUrl,
         image,
@@ -244,6 +278,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         getAllUserHistory,
         saveUserHistory,
         deleteUserHistory,
+        bgChnageUsingPrompt,
     };
 
     return (

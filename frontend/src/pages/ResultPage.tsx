@@ -1,21 +1,26 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Save, Edit3, ArrowLeft, Sparkles, Plus } from "lucide-react";
+import { Download, Save, Edit3, ArrowLeft, Sparkles, Plus, Wand2 } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import toast from "react-hot-toast";
 import { AppContext } from "@/context/AppContext";
 import { base64ToFile, uploadToCloudninary } from "@/util/Cloudinary";
+import { Input } from "@/Components/ui/input";
 
 export const ResultPage = () => {
 
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [selectedBackground, setSelectedBackground] = useState<string>("transparent");
-    const [bgChanged, setBgChanged] = useState(false);
+    const [bgChanged, setBgChanged] = useState(true);
+    const [prompt, setPrompt] = useState("");
 
 
     const appContext = useContext(AppContext);
     const resultImage = appContext?.resultImage;
+    const image = appContext?.image;
+    const generateByPrompt = appContext?.bgChnageUsingPrompt
+
 
     //console.log("Result Image:", resultImage);
 
@@ -39,15 +44,15 @@ export const ResultPage = () => {
         { id: "pattern2", bg: "linear-gradient(45deg, hsl(var(--muted)) 25%, transparent 25%, transparent 75%, hsl(var(--muted)) 75%)", bgSize: "20px 20px", label: "Stripes" },
         { id: "pattern1", bg: "radial-gradient(circle, hsl(var(--muted)) 1px, transparent 1px)", bgSize: "20px 20px", label: "Dots" },
         { id: "pattern2", bg: "linear-gradient(45deg, hsl(var(--muted)) 25%, transparent 25%, transparent 75%, hsl(var(--muted)) 75%)", bgSize: "20px 20px", label: "Stripes" },
-        { id: "pattern1", bg: "radial-gradient(circle, hsl(var(--muted)) 1px, transparent 1px)", bgSize: "20px 20px", label: "Dots" },
-        { id: "pattern2", bg: "linear-gradient(45deg, hsl(var(--muted)) 25%, transparent 25%, transparent 75%, hsl(var(--muted)) 75%)", bgSize: "20px 20px", label: "Stripes" },
     ];
 
     useEffect(() => {
-        if (resultImage) {
+
+        if (resultImage || image) {
             setIsLoading(false);
         }
-    }, [navigate, resultImage]);
+
+    }, [navigate, resultImage, image]);
 
 
     const handleSave = async () => {
@@ -62,7 +67,7 @@ export const ResultPage = () => {
         if (!url) {
             return toast.error("Failed to upload image. Please try again.");
         }
-        appContext?.saveUserHistory?.({ image: url , sorceType: "bg-remove" });
+        appContext?.saveUserHistory?.({ image: url, sorceType: "bg-remove" });
     };
 
     const handleEdit = () => {
@@ -120,7 +125,7 @@ export const ResultPage = () => {
                 </header>
 
                 {/* Main Content */}
-                <div className="max-w-6xl mx-auto">
+                <div className="max-w-6xl max-h-screen mx-auto">
                     {isLoading ? (
                         <div className="text-center py-16 animate-fade-in">
                             <div className="w-16 h-16 mx-auto mb-4 rounded-full gradient-primary flex items-center justify-center animate-glow-pulse">
@@ -156,15 +161,55 @@ export const ResultPage = () => {
                                     }}
                                 >
                                     <img
-                                        src={resultImage as string}
+                                        src={resultImage ? resultImage as string : (image ? URL.createObjectURL(image) : "")}
                                         alt="Processed result"
                                         className="max-w-full max-h-full object-contain"
                                     />
                                 </div>
+                                {
+                                    bgChanged && (
+                                            <div className="flex flex-col p-4  w-full">
+                                                <div className="flex flex-col sm:flex-row gap-4">
+                                                    <div className="flex-1">
+                                                        <Input
+                                                            placeholder="Describe your desire background..."
+                                                            value={prompt}
+                                                            onChange={(e: any) => setPrompt(e.target.value)}
+                                                            className="h-12 text-white border-1 border-dashed border-gray-700 text-base focus-none transition-colors"
+                                                            onKeyDown={(e: any) => e.key === "Enter" && generateByPrompt?.(image, prompt)}
+                                                        />
+                                                    </div>
+                                                    <Button
+                                                        onClick={() => generateByPrompt?.(image, prompt)}
+                                                        //disabled={!prompt.trim() || isGenerating}
+                                                        className="h-12 px-8 gradient-accent text-white border-0 font-semibold"
+                                                    >
+                                                        {/* {isGenerating ? (
+                                                    <>
+                                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                                                        Generating...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Wand2 className="w-4 h-4 mr-2" />
+                                                        Generate
+                                                    </>
+                                                )} */} generate
+                                                    </Button>
+                                                    {/* <Button
+                                            onClick={handleGetImages}
+                                            className="h-12 px-8 bg-gray-800 text-white border-0 font-semibold"
+                                        >
+                                            Get Images
+                                        </Button> */}
+                                                </div>
+                                            </div>
+                                    )
+                                }
                             </div>
 
                             {/* Sidebar with Background Options */}
-                            <div className="w-full lg:w-80 space-y-6 relative">
+                            <div className="w-full lg:w-80 space-y-4 relative">
                                 {/* Color Background Section */}
                                 <div className="p-6 rounded-xl">
                                     <h3 className="text-lg font-semibold mb-4">Color background</h3>
@@ -174,8 +219,8 @@ export const ResultPage = () => {
                                                 key={bg.id}
                                                 onClick={() => setSelectedBackground(bg.id)}
                                                 className={`w-12 h-12 rounded-lg border-2 transition-all hover:scale-105 ${selectedBackground === bg.id
-                                                        ? "border-primary shadow-glow"
-                                                        : "border-border hover:border-primary/50"
+                                                    ? "border-primary shadow-glow"
+                                                    : "border-border hover:border-primary/50"
                                                     }`}
                                                 style={{
                                                     background: bg.id === "transparent"
@@ -198,31 +243,31 @@ export const ResultPage = () => {
                                 {/* Image Background Section */}
                                 {
                                     bgChanged && (
-                                            <div className="glass-card p-6 rounded-xl relative scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary/50 scrollbar-track-transparent max-h-96 overflow-y-auto">
-                                                <h3 className="text-lg font-semibold mb-4">Image background</h3>
-                                                <div className="grid grid-cols-2 gap-3">
-                                                    {/* Add New Background Button */}
-                                                    <button className="w-full h-20 border-2 border-dashed border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-glass-hover transition-all group">
-                                                        <Plus className="w-6 h-6 text-muted-foreground group-hover:text-primary" />
-                                                    </button>
+                                        <div className="p-6 max-h-96 rounded-xl relative scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary/50 scrollbar-track-transparent overflow-y-auto">
+                                            <h3 className="text-lg font-semibold mb-4">Image background</h3>
+                                            <div className="grid grid-cols-2 gap-3 mb-20">
+                                                {/* Add New Background Button */}
+                                                <button className="w-full h-20 border-2 border-dashed border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-glass-hover transition-all group">
+                                                    <Plus className="w-6 h-6 text-muted-foreground group-hover:text-primary" />
+                                                </button>
 
-                                                    {imageBackgrounds.map((bg) => (
-                                                        <button
-                                                            key={bg.id}
-                                                            onClick={() => setSelectedBackground(bg.id)}
-                                                            className={`w-full h-20 rounded-lg border-2 transition-all hover:scale-105 ${selectedBackground === bg.id
-                                                                ? "border-primary shadow-glow"
-                                                                : "border-border hover:border-primary/50"
-                                                                }`}
-                                                            style={{
-                                                                background: bg.bg,
-                                                                backgroundSize: bg.bgSize || "cover"
-                                                            }}
-                                                            title={bg.label}
-                                                        />
-                                                    ))}
-                                                </div>
+                                                {imageBackgrounds.map((bg) => (
+                                                    <button
+                                                        key={bg.id}
+                                                        onClick={() => setSelectedBackground(bg.id)}
+                                                        className={`w-full h-18 rounded-lg border-2 transition-all hover:scale-105 ${selectedBackground === bg.id
+                                                            ? "border-primary shadow-glow"
+                                                            : "border-border hover:border-primary/50"
+                                                            }`}
+                                                        style={{
+                                                            background: bg.bg,
+                                                            backgroundSize: bg.bgSize || "cover"
+                                                        }}
+                                                        title={bg.label}
+                                                    />
+                                                ))}
                                             </div>
+                                        </div>
                                     )
                                 }
 

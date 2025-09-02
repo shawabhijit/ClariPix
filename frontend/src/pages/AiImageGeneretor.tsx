@@ -9,6 +9,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/Components/ui/popover
 import { Wand2, Download, Brush, Stars, EllipsisVertical, Edit, Save } from "lucide-react"
 import { AppContext } from "@/context/AppContext"
 import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
 
 export default function AIGeneratorPage() {
     const navigate = useNavigate();
@@ -86,7 +87,49 @@ export default function AIGeneratorPage() {
         if (!url) return
         window.open(url, "_blank", "noopener,noreferrer")
     }
-    
+
+
+    // const OPENROUTER_API_KEY = "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";
+
+    // async function callOpenRouter() {
+    //     try {
+    //         const response = await axios.post(
+    //             "https://openrouter.ai/api/v1/chat/completions",
+    //             {
+    //                 model: "google/gemini-2.5-flash-image-preview:free",
+    //                 messages: [
+    //                     {
+    //                         role: "user",
+    //                         content: [
+    //                             {
+    //                                 type: "text",
+    //                                 text: "What is in this image?",
+    //                             },
+    //                             {
+    //                                 type: "image_url",
+    //                                 image_url: {
+    //                                     url: "https://imgs.search.brave.com/aPzo5cWxaVkTHx2wA3GQTrj6MI2Gtmm3R3wA53UdHoE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWd2/My5mb3Rvci5jb20v/aW1hZ2VzL3NpZGUv/Y29udmVydC1hbi1p/bWFnZS1maWxlLWZv/cm1hdC1mcm9tLWpw/Zy10by10cmFuc3Bh/cmVudC1iYWNrZ3Jv/dW5kLXBuZy11c2lu/Zy1Gb3RvcnMtaW1h/Z2UtY29udmVydGVy/LmpwZw",
+    //                                 },
+    //                             },
+    //                         ],
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+    //                     "Content-Type": "application/json",
+    //                 },
+    //             }
+    //         );
+
+    //         console.log(response.data);
+    //     } catch (error: any) {
+    //         console.error("Error:", error.response ? error.response.data : error.message);
+    //     }
+    // }
+
+    // callOpenRouter();
 
     return (
         <div className="min-h-screen bg-background">

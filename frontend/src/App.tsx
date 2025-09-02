@@ -64,6 +64,16 @@ function App() {
               </SignedOut>
             </>
           } />
+          <Route path="/change-background" element={
+            <>
+              <SignedIn>
+                <ImageBgRemover />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
           <Route path="/ai/result" element={
             <>
               <SignedIn>
