@@ -13,4 +13,13 @@ public interface ClipDropClient {
     @PostMapping(value = "/remove-background/v1" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     byte[] removeBackground(@RequestPart("image_file") MultipartFile file ,
                             @RequestHeader("x-api-key") String apiKey);
+
+    @PostMapping(value = "/replace-background/v1" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    byte[] replaceBackground(
+            @RequestHeader("x-api-key") String apikey,
+            @RequestPart("image_file") MultipartFile file,
+            @RequestPart("prompt") String prompt
+    );
+
+
 }

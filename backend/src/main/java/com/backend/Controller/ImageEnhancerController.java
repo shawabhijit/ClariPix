@@ -33,8 +33,7 @@ public class ImageEnhancerController {
         RemoveBgResponse response = null;
         Map<String , Object> responseMap = new HashMap<>();
         try {
-            // Validation - user exits or not
-            if (authentication.getName().isEmpty() || authentication.getName() == null) {
+            if (authentication.getName() == null || authentication.getName().isEmpty()) {
                 response = RemoveBgResponse.builder()
                         .statusCode(HttpStatus.FORBIDDEN)
                         .data("User doesn't have any permission to remove background")
@@ -66,7 +65,6 @@ public class ImageEnhancerController {
             return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.TEXT_PLAIN).body(Base64Image);
         }
         catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     RemoveBgResponse.builder()
                     .statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -77,6 +75,52 @@ public class ImageEnhancerController {
         }
     }
 
+    @PostMapping("/replace-background_prompt")
+    public ResponseEntity<?> replaceBackgroundWithPrompt(@RequestParam("file") MultipartFile file, @RequestParam("prompt") String prompt , Authentication auth) {
+        RemoveBgResponse response = null;
+        Map<String , Object> responseMap = new HashMap<>();
+        try {
+            // Validation - user exits or not
+            if (auth.getName().isEmpty() || auth.getName() == null) {
+                response = RemoveBgResponse.builder()
+                        .statusCode(HttpStatus.FORBIDDEN)
+                        .data("User doesn't have any permission to remove background")
+                        .success(false)
+                        .build();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
 
+            UserDto user = userService.getUserByClerkId(auth.getName());
+
+            // Validation : if exits and have credits
+            if (user.getCredits() == 0) {
+                responseMap.put("message", "You do not have any credits");
+                responseMap.put("creditBalance" , user.getCredits());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        RemoveBgResponse.builder()
+                                .statusCode(HttpStatus.BAD_REQUEST)
+                                .data(responseMap)
+                                .success(false)
+                );
+            }
+
+            byte[] image = imageEnhanceAIService.replaceBackgroundWithPrompt(file, prompt);
+            String base64Image = Base64.getEncoder().encodeToString(image);
+
+            user.setCredits(user.getCredits() - 1);
+            userService.saveUser(user);
+
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.TEXT_PLAIN).body(base64Image);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    RemoveBgResponse.builder()
+                            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .data(e.getMessage() + "-> Something went wrong while removing background")
+                            .success(false)
+                            .build()
+            );
+        }
+    }
 
 }

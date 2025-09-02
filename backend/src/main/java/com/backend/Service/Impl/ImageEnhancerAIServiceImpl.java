@@ -20,4 +20,9 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
     public byte[] removeBackground(MultipartFile file) {
         return clipDropClient.removeBackground(file,clipDropApiKey);
     }
+
+    @Override
+    public byte[] replaceBackgroundWithPrompt(MultipartFile file, String prompt) {
+        return clipDropClient.replaceBackground(clipDropApiKey , file , prompt);
+    }
 }
