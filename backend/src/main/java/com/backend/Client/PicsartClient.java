@@ -30,8 +30,6 @@ public interface PicsartClient {
             @PathVariable String inference_id
     );
 
-
-
 }
 
 /*

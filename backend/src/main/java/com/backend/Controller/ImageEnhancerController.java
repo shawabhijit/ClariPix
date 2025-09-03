@@ -1,9 +1,12 @@
 package com.backend.Controller;
 
 import com.backend.DTO.UserDto;
+import com.backend.Request.PicsartRequest;
+import com.backend.Response.PicsartResponse;
 import com.backend.Response.RemoveBgResponse;
 import com.backend.Service.ImageEnhanceAIService;
 import com.backend.Service.UserService;
+import com.backend.Util.MultipartFileResizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -104,13 +107,67 @@ public class ImageEnhancerController {
                 );
             }
 
-            byte[] image = imageEnhanceAIService.replaceBackgroundWithPrompt(file, prompt);
+            MultipartFile multipartFile = MultipartFileResizer.resizeIfNeeded(file);
+
+            byte[] image = imageEnhanceAIService.replaceBackgroundWithPrompt(multipartFile, prompt);
             String base64Image = Base64.getEncoder().encodeToString(image);
 
             user.setCredits(user.getCredits() - 1);
             userService.saveUser(user);
 
             return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.TEXT_PLAIN).body(base64Image);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    RemoveBgResponse.builder()
+                            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .data(e.getMessage() + "-> Something went wrong while removing background")
+                            .success(false)
+                            .build()
+            );
+        }
+    }
+
+    @PostMapping("/replace-background_image")
+    public ResponseEntity<?> replaceBackgroundWithImage (
+            @RequestParam("image") MultipartFile image,
+            @RequestParam(value = "bg_Image" , required = false) MultipartFile bg_image,
+            @RequestParam(value = "bg_image_url" , required = false) String bg_image_url,
+            Authentication auth
+    ) {
+
+        RemoveBgResponse response = null;
+        Map<String , Object> responseMap = new HashMap<>();
+
+        try {
+            // Validation - user exits or not
+            if (auth.getName().isEmpty() || auth.getName() == null) {
+                response = RemoveBgResponse.builder()
+                        .statusCode(HttpStatus.FORBIDDEN)
+                        .data("User doesn't have any permission to remove background")
+                        .success(false)
+                        .build();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
+            UserDto user = userService.getUserByClerkId(auth.getName());
+            // Validation : if exits and have credits
+            if (user.getCredits() == 0) {
+                responseMap.put("message", "You do not have any credits");
+                responseMap.put("creditBalance" , user.getCredits());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        RemoveBgResponse.builder()
+                                .statusCode(HttpStatus.BAD_REQUEST)
+                                .data(responseMap)
+                                .success(false)
+                );
+            }
+
+            PicsartResponse picsartResponse = imageEnhanceAIService.changeBackground(image , bg_image , bg_image_url);
+
+            user.setCredits(user.getCredits() - 1);
+            userService.saveUser(user);
+
+            return ResponseEntity.status(HttpStatus.OK).body(picsartResponse);
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

@@ -1,11 +1,18 @@
 package com.backend.Service;
 
+import com.backend.Response.PicsartResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageEnhanceAIService {
 
     byte[] removeBackground(MultipartFile file);
     byte[] replaceBackgroundWithPrompt(MultipartFile file , String prompt);
+
+    PicsartResponse changeBackground(
+            MultipartFile image,
+            MultipartFile bg_image,
+            String bg_image_url
+    );
 }
 /*
 

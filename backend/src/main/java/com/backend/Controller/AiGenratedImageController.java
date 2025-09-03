@@ -20,7 +20,7 @@ public class AiGenratedImageController {
             @RequestBody PromptRequest request,
             @RequestParam(defaultValue = "1024" , required = false) int width,
             @RequestParam(defaultValue = "1024" , required = false) int height,
-            @RequestParam(defaultValue = "1" , required = false) int count
+            @RequestParam(defaultValue = "3" , required = false) int count
     ) throws Exception {
         // TODO : check user present or not
         // TODO : check user have enough credits to generate images
