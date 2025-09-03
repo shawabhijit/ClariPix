@@ -31,7 +31,7 @@ const ImageBgRemover: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const { removeBg , setImage} = useContext<any>(AppContext);
+    const { removeBg , setImage , setBgChanged} = useContext<any>(AppContext);
 
     // Handle file select
     const handleImageChange = (file: File) => {
@@ -42,10 +42,12 @@ const ImageBgRemover: React.FC = () => {
     useEffect(() => {
         if (selectedImage && location.pathname === "/remove-bg") {
             removeBg(selectedImage);
+            setBgChanged(false);
         }
         else if (location.pathname === "/change-background" && selectedImage) {
             setImage(null);
             setImage(selectedImage);
+            setBgChanged(true);
             navigate("/ai/result");
         }
     }, [selectedImage , location]);

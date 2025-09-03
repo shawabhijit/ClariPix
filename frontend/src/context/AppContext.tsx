@@ -26,6 +26,8 @@ type AppContextType = {
     deleteUserHistory?: (image: string) => {};
     bgChnageUsingPrompt?: (selectedImage : any , prompt : string | null) => {};
     bgChnageUsingImage?: (selectedImage : any , bgImage : any , bgImageurl : any) => {};
+    bgChanged?: boolean;
+    setBgChanged?: Dispatch<SetStateAction<boolean>>;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -41,6 +43,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [editImage, setEditImage] = useState<string | null>(null);
     const [history, setHistory] = useState<any[]>([]);
+    const [bgChanged, setBgChanged] = useState(true);
 
     const { openSignIn } = useClerk();
     const { getToken } = useAuth();
@@ -129,13 +132,13 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             const response = await axios.post(backendUrl + "/images/replace-background_image" , formdata , {
                 headers : {
                     Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
                 }
             })
             console.log("Response from bg change using image .." , response);
 
-            if (response.data && response.data.image) {
-                setImage(false);
-                setResultImage(response?.data?.image);
+            if (response.data) {
+                setResultImage(response?.data?.data.url);
             }
             else {
                 toast.error("Error changing background by image , kindly use your personal background.")
@@ -316,6 +319,8 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         deleteUserHistory,
         bgChnageUsingPrompt,
         bgChnageUsingImage,
+        bgChanged,
+        setBgChanged,
     };
 
     return (
