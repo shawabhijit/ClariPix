@@ -78,7 +78,7 @@ export default function AIGeneratorPage() {
     if (generatedImages && generatedImages.length > 0) {
         // Demo filler: repeat first image 3x for the grid
         for (let i = 0; i < 3; i++) {
-            tempArr.push(generatedImages[0])
+            tempArr.push(generatedImages[i])
         }
     }
 

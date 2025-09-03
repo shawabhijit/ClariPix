@@ -1,6 +1,5 @@
 import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
 import axios from "axios";
-import type { IncomingMessage } from "node:http";
 import { createContext, useState, type Dispatch, type SetStateAction } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +25,7 @@ type AppContextType = {
     saveUserHistory?: ({image, sorceType}: {image: string,sorceType: string}) => {};
     deleteUserHistory?: (image: string) => {};
     bgChnageUsingPrompt?: (selectedImage : any , prompt : string | null) => {};
+    bgChnageUsingImage?: (selectedImage : any , bgImage : any , bgImageurl : any) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -108,6 +108,42 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         catch (error) {
             console.error("Error changing background by prompt:", error);
             toast.error("Error changing background by pormpt , kindly use your personal background.")
+        }
+    }
+
+    const bgChnageUsingImage = async (selectedImage:any , bgImage : any , bgImageurl : any) => {
+        try {
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+            setImage(selectedImage);
+            setResultImage(false);
+            
+            const token = await getToken();
+
+            const formdata = new FormData();
+            selectedImage && formdata.append("image" , selectedImage);
+            bgImage && formdata.append("bg_image" , bgImage);
+            bgImageurl && formdata.append("bg_image_url" , bgImageurl);
+
+            const response = await axios.post(backendUrl + "/images/replace-background_image" , formdata , {
+                headers : {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            console.log("Response from bg change using image .." , response);
+
+            if (response.data && response.data.image) {
+                setImage(false);
+                setResultImage(response?.data?.image);
+            }
+            else {
+                toast.error("Error changing background by image , kindly use your personal background.")
+            }
+        }
+        catch (error) {
+            console.error("Error changing background by image:", error);
+            toast.error("Error changing background by image , kindly use your personal background.")
         }
     }
 
@@ -279,6 +315,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         saveUserHistory,
         deleteUserHistory,
         bgChnageUsingPrompt,
+        bgChnageUsingImage,
     };
 
     return (

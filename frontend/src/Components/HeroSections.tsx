@@ -102,16 +102,10 @@ const HeroSections = () => {
 
                     {/* Demo Animation Card */}
                     <div className="relative flex justify-center lg:justify-end">
-                        <Card className="gradient-card border-0 shadow-2xl max-w-md w-full">
-                            <CardContent className="p-8">
+                        <Card className="gradient-card border-0 max-w-lg shadow-2xl w-full rounded-lg p-0">
+                            <CardContent className="p-0">
                                 <div className="aspect-video bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-lg flex items-center justify-center relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-[url('/professional-photo-editing-interface.png')] bg-cover bg-center opacity-20" />
-                                    <div className="relative z-10 text-center space-y-4">
-                                        <div className="w-16 h-16 mx-auto rounded-full gradient-primary flex items-center justify-center">
-                                            <Play className="w-8 h-8 text-white ml-1" />
-                                        </div>
-                                        <p className="text-sm font-medium">Interactive Demo</p>
-                                    </div>
+                                    <img src="./Hero.png" alt="" className='w-full h-full bg-cover' />
                                 </div>
                             </CardContent>
                         </Card>
