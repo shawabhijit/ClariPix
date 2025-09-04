@@ -1,18 +1,22 @@
 package com.backend.Service;
 
+import com.backend.Response.ChangeBgByImageResponse;
 import com.backend.Response.PicsartResponse;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface ImageEnhanceAIService {
 
     byte[] removeBackground(MultipartFile file);
     byte[] replaceBackgroundWithPrompt(MultipartFile file , String prompt);
+    byte[] imageUpscale(MultipartFile file , int width , int height);
 
-    PicsartResponse changeBackground(
+    ChangeBgByImageResponse changeBackground(
             MultipartFile image,
             MultipartFile bg_image,
             String bg_image_url
-    );
+    ) throws IOException;
 }
 /*
 
