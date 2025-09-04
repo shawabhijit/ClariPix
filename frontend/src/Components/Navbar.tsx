@@ -34,7 +34,7 @@ const Navbar = () => {
     const aiTools = [
         { name: "Remove Background", icon: Scissors, href: "/remove-bg" },
         { name: "Change Background", icon: Palette, href: "/change-background" },
-        { name: "Enhance Resolution", icon: Zap, href: "/editor?tool=enhance-resolution" },
+        { name: "Enhance Resolution", icon: Zap, href: "/image-upscale" },
         { name: "Remove Objects", icon: Eraser, href: "/editor?tool=remove-objects" },
         { name: "Convert Format", icon: RefreshCw, href: "/editor?tool=convert-format" },
     ]

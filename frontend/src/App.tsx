@@ -13,6 +13,8 @@ import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react"
 import History from "./pages/History"
 import ImageBgRemover from "./pages/BgRemove"
 import ResultPage from "./pages/ResultPage"
+import ImageUpscale  from "./pages/ImageUpscale"
+import UpscaleResult from "./pages/UpscaleResult"
 
 function App() {
 
@@ -74,10 +76,30 @@ function App() {
               </SignedOut>
             </>
           } />
+          <Route path="/image-upscale" element={
+            <>
+              <SignedIn>
+                <ImageUpscale />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
           <Route path="/ai/result" element={
             <>
               <SignedIn>
                 <ResultPage />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
+          <Route path="/ai/upscale-result" element={
+            <>
+              <SignedIn>
+                <UpscaleResult />
               </SignedIn>
               <SignedOut>
                 <RedirectToSignIn />

@@ -58,7 +58,7 @@ const Features = () => {
             title: "Enhance Resolution",
             description: "ClariPix AI Upscaler lets you increase image resolution up to 4× without losing quality. Turn blurry 720p shots into crisp 1080p or higher while preserving textures and details. Ideal for e-commerce, printing, or restoring old photographs — our AI sharpens every pixel for professional results.",
             gradient: "from-teal-500 to-emerald-600",
-            demo: "https://res.cloudinary.com/dvkvr88db/video/upload/v1756133157/super-resolution-demo_cacceq.mp4",
+            demo: "https://res.cloudinary.com/dvkvr88db/video/upload/v1756995985/image_upscaler_web_vssyrd.mp4",
             result: "/abstract-geometric-shapes.png",
             details: [
                 "Upscale up to 4× with AI precision",
