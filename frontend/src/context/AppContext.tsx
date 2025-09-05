@@ -28,7 +28,7 @@ type AppContextType = {
     bgChnageUsingImage?: (selectedImage : any , bgImage : any , bgImageurl : any) => {};
     bgChanged?: boolean;
     setBgChanged?: Dispatch<SetStateAction<boolean>>;
-    upScaleImage?: (selectedImage: any , width : number , height : number) => {};
+    upScaleImage?: (selectedImage: any) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -151,7 +151,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const upScaleImage = async (selectedImage: any , width : number , height : number) => {
+    const upScaleImage = async (selectedImage: any) => {
         try {
             if (!isSignedIn) {
                 return openSignIn();
@@ -163,15 +163,14 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
             const formdata = new FormData();
             selectedImage && formdata.append("image_file" , selectedImage);
-            formdata.append("width" , width.toString());
-            formdata.append("height" , height.toString());
 
             navigate("/ai/upscale-result");
 
             const response = await axios.post(backendUrl + "/images/image-upscale" , formdata ,{
                 headers : {
                     Authorization: `Bearer ${token}`,
-                }
+                },
+                responseType: "blob",
             })
             console.log("Response from image upscaler .." , response);
 

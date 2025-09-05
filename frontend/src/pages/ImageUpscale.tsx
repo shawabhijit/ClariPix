@@ -1,12 +1,18 @@
 import { ImageUpload } from "@/Components/ImageUpload";
+import { AppContext } from "@/context/AppContext";
 import { Shield, Sparkles, Zap } from "lucide-react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
 const ImageUpscale = () => {
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const appConstext = useContext(AppContext);
+    const upScaleImage = appConstext?.upScaleImage;
+    const setImage = appConstext?.setImage;
+    const navigate = useNavigate();
 
     const handleImageChange = (file: File) => {
         setSelectedImage(file);
@@ -29,6 +35,14 @@ const ImageUpscale = () => {
             description: "Your images are processed securely and never stored on our servers"
         }
     ];
+
+    useEffect(() => {
+        if (selectedImage) {
+            setImage?.(selectedImage);
+            upScaleImage?.(selectedImage);
+            navigate("/ai/upscale-result")
+        }
+    },[selectedImage])
 
     return (
         <div className="min-h-screen relative">
