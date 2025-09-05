@@ -42,8 +42,14 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
     }
 
     @Override
-    public byte[] imageUpscale(MultipartFile file, int width, int height) {
-        return clipDropClient.imageUpscale(clipDropApiKey , file , width, height);
+    public byte[] imageUpscale(MultipartFile file, Integer target_width, Integer target_height) {
+        System.out.println("In service image → width=" + target_width + ", height=" + target_height);
+        return clipDropClient.imageUpscale(
+                clipDropApiKey,
+                file,
+                target_width,
+                target_height
+        );
     }
 
     @Override

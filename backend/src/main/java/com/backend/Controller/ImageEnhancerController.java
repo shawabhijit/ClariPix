@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -184,21 +186,16 @@ public class ImageEnhancerController {
 
     @PostMapping("/image-upscale")
     public ResponseEntity<?> upscaleImage(
-            @RequestParam("image_file") MultipartFile file, Authentication auth,
-            @RequestParam(defaultValue = "1280" , required = false) Integer width,
-            @RequestParam(defaultValue = "1080" , required = false) Integer height,
+            @RequestParam("image_file") MultipartFile imageFile,
             Authentication authentication
-    ) {
-        if (width == null || width <= 0) width = 1280;
-        if (height == null || height <= 0) height = 1080;
-
+    ) throws IOException {
         RemoveBgResponse response = null;
-        Map<String , Object> responseMap = new HashMap<>();
+        Map<String, Object> responseMap = new HashMap<>();
         try {
             if (authentication.getName() == null || authentication.getName().isEmpty()) {
                 response = RemoveBgResponse.builder()
                         .statusCode(HttpStatus.FORBIDDEN)
-                        .data("User doesn't have any permission to remove background")
+                        .data("User doesn't have any permission to upscale image")
                         .success(false)
                         .build();
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
@@ -206,10 +203,25 @@ public class ImageEnhancerController {
 
             UserDto user = userService.getUserByClerkId(authentication.getName());
 
-            // Validation : if exits and have credits
+            MultipartFileResizer.ImageDimensions dimensions = MultipartFileResizer.getImageDimensions(imageFile);
+            System.out.println("In Controller Received upscale request - width: " + dimensions.getWidth() + ", height: " + dimensions.getHeight());
+            System.out.println("File size: " + imageFile.getSize() + " bytes");
+
+            // Add validation for maximum dimensions
+            if (dimensions.getWidth()  > 4096 || dimensions.getHeight() > 4096) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        RemoveBgResponse.builder()
+                                .statusCode(HttpStatus.BAD_REQUEST)
+                                .data("Target dimensions cannot exceed 4096x4096 pixels")
+                                .success(false)
+                                .build()
+                );
+            }
+
+            // Validation: if exists and have credits
             if (user.getCredits() == 0) {
                 responseMap.put("message", "You do not have any credits");
-                responseMap.put("creditBalance" , user.getCredits());
+                responseMap.put("creditBalance", user.getCredits());
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                         RemoveBgResponse.builder()
                                 .statusCode(HttpStatus.BAD_REQUEST)
@@ -218,22 +230,30 @@ public class ImageEnhancerController {
                 );
             }
 
-            byte[] imageBytes = imageEnhanceAIService.imageUpscale(file, width, height);
+            System.out.println("Calling upscale service with dimensions: " + dimensions.getHeight() + "x" + dimensions.getWidth());
+            byte[] imageBytes = imageEnhanceAIService.imageUpscale(imageFile, dimensions.getWidth(), dimensions.getHeight());
+            System.out.println("Received upscaled image size: " + imageBytes.length + " bytes");
 
-            // detect the mime type - jpeg , webp , png
+            // Detect the mime type - jpeg, webp, png
             Tika tika = new Tika();
             String mimeType = tika.detect(imageBytes);
+            System.out.println("Detected mime type: " + mimeType);
 
             user.setCredits(user.getCredits() - 1);
             userService.saveUser(user);
 
-            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.parseMediaType(mimeType)).body(imageBytes);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType.parseMediaType(mimeType))
+                    .body(imageBytes);
+
         }
         catch (Exception e) {
+            System.err.println("Error during upscaling: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     RemoveBgResponse.builder()
                             .statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .data(e.getMessage() + "-> Something went wrong while removing background")
+                            .data(e.getMessage() + " -> Something went wrong while upscaling image")
                             .success(false)
                             .build()
             );

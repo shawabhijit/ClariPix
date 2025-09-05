@@ -23,9 +23,9 @@ public interface ClipDropClient {
 
     @PostMapping(value = "/image-upscaling/v1/upscale" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     byte[] imageUpscale(
-        @RequestHeader("x-api-key") String apikey,
-        @RequestPart("image_file") MultipartFile file,
-        @RequestPart("target_width") int width,
-        @RequestPart("target_height") int height
+            @RequestHeader("x-api-key") String apikey,
+            @RequestPart("image_file") MultipartFile file,
+            @RequestPart(name = "target_width" , value = "1460") Integer target_width,
+            @RequestPart(name = "target_height" , value = "1280") Integer target_height
     );
 }

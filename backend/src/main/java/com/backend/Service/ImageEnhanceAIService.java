@@ -10,7 +10,7 @@ public interface ImageEnhanceAIService {
 
     byte[] removeBackground(MultipartFile file);
     byte[] replaceBackgroundWithPrompt(MultipartFile file , String prompt);
-    byte[] imageUpscale(MultipartFile file , int width , int height);
+    byte[] imageUpscale(MultipartFile file , Integer width , Integer height);
 
     ChangeBgByImageResponse changeBackground(
             MultipartFile image,
