@@ -87,7 +87,7 @@ const Reviews = () => {
     ]
 
     return (
-        <section className="relative overflow-hidden py-24">
+        <section className="relative overflow-hidden">
             <div className="container px-4 mx-auto max-w-7xl text-center">
                 <div className="max-w-3xl mx-auto space-y-6">
                     <Badge variant="secondary" className="w-fit mx-auto">
@@ -129,7 +129,7 @@ const Reviews = () => {
             </div>
 
             {/* Reviews Grid */}
-            <div className="container px-4 mx-auto max-w-7xl py-20">
+            <div className="container px-4 mx-auto max-w-7xl py-15">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     {reviews.map((review) => (
                         <Card key={review.id} className="border-0 bg-secondary/15 rounded-2xl text-white shadow-lg hover:shadow-xl transition-shadow">

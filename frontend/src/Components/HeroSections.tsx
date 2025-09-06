@@ -5,6 +5,8 @@ import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
 import { Link } from 'react-router-dom'
 import LaptopMockup from './LaptopMockup'
+import { motion } from "framer-motion"
+
 
 const HeroSections = () => {
 
@@ -43,9 +45,27 @@ const HeroSections = () => {
 
     return (
         <section className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-bl from-green-500/10 via-background to-emerald-500/20" />
-            <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-teal-400/30 to-transparent rounded-full blur-3xl" />
+            <motion.div
+                className="absolute inset-0 bg-gradient-to-bl from-green-500/10 via-background to-emerald-500/20"
+                animate={{ backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"] }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                style={{ backgroundSize: "200% 200%" }}
+            />
+            <motion.div
+                className="absolute top-10 left-30 w-96 h-96 bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl"
+                animate={{ x: [0, 40, -20, 0], y: [0, -20, 30, 0] }}
+                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+                className="absolute top-40 right-0 w-96 h-96 bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl"
+                animate={{ x: [0, 30, -30, 0], y: [0, -20, 30, 0] }}
+                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+                className="absolute bottom-50 right-5 w-96 h-96 bg-gradient-to-tl from-teal-400/30 to-transparent rounded-full blur-3xl"
+                animate={{ x: [0, -25, 20, 0], y: [0, 20, -15, 0] }}
+                transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+            />
             <div className="container relative px-4 py-24 md:py-32 mx-auto max-w-7xl">
                 <div className="grid grid-cols-1 gap-12 items-center justify-center">
                     <div className="space-y-8 text-center lg:text-left flex flex-col items-center justify-center mb-0 md:mb-15">
