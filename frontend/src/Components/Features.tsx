@@ -125,7 +125,7 @@ const Features = () => {
                         return (
                             <div
                                 key={feature.id}
-                                className={`grid grid-cols-1 p-5 md:p-0 lg:grid-cols-2 gap-20 items-center ${!isEven ? "lg:grid-flow-col-dense" : ""}`}
+                                className={`grid grid-cols-1 p-5 md:p-0 lg:grid-cols-2 gap-20 items-center ${!isEven ? "lg:grid-flow-col-dense" : ""} bg-primary/20 rounded-2xl`}
                             >
                                 {/* Demo Section */}
                                 <div className={`${!isEven ? "lg:col-start-2" : ""}`}>
@@ -158,7 +158,7 @@ const Features = () => {
 
 
                                 {/* Details Section */}
-                                <div className={`space-y-6 ${!isEven ? "lg:col-start-1 lg:row-start-1" : ""}`}>
+                                <div className={`space-y-6 ${!isEven ? "lg:col-start-1 lg:row-start-1" : ""} p-5`}>
                                     <div className="space-y-4">
                                         <div
                                             className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center`}

@@ -3,6 +3,8 @@ import { ArrowRight, Eraser, Palette, Play, RefreshCw, Scissors, Sparkles, Star,
 import { Button } from './ui/button'
 // import { Link } from 'react-router-dom'
 import { Card, CardContent } from './ui/card'
+import { Link } from 'react-router-dom'
+import LaptopMockup from './LaptopMockup'
 
 const HeroSections = () => {
 
@@ -45,9 +47,9 @@ const HeroSections = () => {
             <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-teal-400/30 to-transparent rounded-full blur-3xl" />
             <div className="container relative px-4 py-24 md:py-32 mx-auto max-w-7xl">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center justify-center">
-                    <div className="space-y-8 text-center lg:text-left">
-                        <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-12 items-center justify-center">
+                    <div className="space-y-8 text-center lg:text-left flex flex-col items-center justify-center mb-0 md:mb-15">
+                        <div className="space-y-4 flex flex-col items-center justify-center">
                             <Badge variant="secondary" className="w-fit mx-auto lg:mx-0">
                                 <Sparkles className="w-3 h-3 mr-1" />
                                 AI-Powered Editing
@@ -58,7 +60,7 @@ const HeroSections = () => {
                                     AI Magic
                                 </span>
                             </h1>
-                            <p className="text-xl text-muted-foreground max-w-lg mx-auto lg:mx-0">
+                            <p className="text-xl text-center text-muted-foreground max-w-lg mx-auto lg:mx-0">
                                 Professional photo editing made simple. Remove backgrounds, enhance resolution, and create stunning
                                 visuals in seconds with our AI-powered tools.
                             </p>
@@ -66,20 +68,20 @@ const HeroSections = () => {
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                             <Button size="lg" className="gradient-primary text-white border-0 group">
-                                {/* <Link to="/editor"> */}
+                                <Link to="/editor" className="flex items-center">
                                     Start Editing Now
                                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                                {/* </Link> */}
+                                </Link>
                             </Button>
-                            <Button size="lg" variant="outline" className="group bg-transparent">
-                                {/* <Link to="#demo"> */}
+                            {/* <Button size="lg" variant="outline" className="group bg-transparent">
+                                <Link to="#demo" className="flex items-center">
                                     <Play className="mr-2 h-4 w-4" />
                                     Watch Demo
-                                {/* </Link> */}
-                            </Button>
+                                </Link>
+                            </Button> */}
                         </div>
 
-                        {/* <div className="flex items-center justify-center lg:justify-start gap-8 pt-4">
+                        <div className="flex items-center justify-center lg:justify-start gap-8 pt-4">
                             <div className="flex items-center gap-2">
                                 <div className="flex -space-x-2">
                                     {[1, 2, 3, 4].map((i) => (
@@ -97,18 +99,12 @@ const HeroSections = () => {
                                 ))}
                                 <span className="text-sm text-muted-foreground ml-1">4.9/5 rating</span>
                             </div>
-                        </div> */}
+                        </div>
                     </div>
 
                     {/* Demo Animation Card */}
                     <div className="relative flex justify-center lg:justify-end">
-                        <Card className="gradient-card border-0 max-w-lg shadow-2xl w-full rounded-lg p-0">
-                            <CardContent className="p-0">
-                                <div className="aspect-video bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-lg flex items-center justify-center relative overflow-hidden">
-                                    <img src="./Hero.png" alt="" className='w-full h-full bg-cover' />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <LaptopMockup imageSrc="./Hero.png" alt="Hero image displayed on laptop" />
                     </div>
                 </div>
                 <div className="mx-auto max-w-7xl pt-20">

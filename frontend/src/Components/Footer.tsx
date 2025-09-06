@@ -13,7 +13,7 @@ const Footer = () => {
                             <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary">
                                 <Sparkles className="h-5 w-5 text-white" />
                             </div>
-                            <span className="font-heading text-xl font-bold">AI Enhancer</span>
+                            <span className="font-heading text-xl font-bold">ClariPix</span>
                         </Link>
                         <p className="text-sm text-muted-foreground max-w-xs">
                             Transform your images with professional AI-powered editing tools. Remove backgrounds, enhance resolution,
@@ -88,7 +88,7 @@ const Footer = () => {
                 </div>
 
                 <div className="mt-12 pt-8 border-t border-border/40 text-center text-sm text-muted-foreground">
-                    <p>&copy; 2024 AI Image Enhancer. All rights reserved.</p>
+                    <p>&copy; 2025 AI Image Enhancer. All rights reserved.</p>
                 </div>
             </div>
         </footer>
