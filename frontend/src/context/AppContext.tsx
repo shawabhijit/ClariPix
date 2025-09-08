@@ -29,6 +29,7 @@ type AppContextType = {
     bgChanged?: boolean;
     setBgChanged?: Dispatch<SetStateAction<boolean>>;
     upScaleImage?: (selectedImage: any) => {};
+    imageConverter?: (selectedImage : any , format : string , preset : number , quality : number) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -183,6 +184,34 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         catch (error) {
             console.error("Error upscaling image:", error);
             toast.error("Error upscaling image. Please try again.");
+        }
+    }
+
+    const imageConverter = async (selectedImage : any , format : string , preset : number , quality : number) => {
+        try {
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+            const token = await getToken();
+            setResultImage(false);
+            setIsGenerating(true);
+            const formdata = new FormData();
+            selectedImage && formdata.append("file" , selectedImage);
+            formdata.append("format" , format);
+            // formdata.append("preset" , preset.toString());
+            // formdata.append("quality" , quality.toString());
+
+            const {data : base64Image} = await axios.post(backendUrl + "/conver/images" , formdata , {
+                headers : {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            console.log("Response from image converter .." , base64Image);
+            setResultImage(`data:image/png;base64,${base64Image}`);
+        }
+        catch (error) {
+            console.error("Error converting image:", error);
+            toast.error("Error converting image. Please try again.");
         }
     }
 
@@ -358,6 +387,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         bgChanged,
         setBgChanged,
         upScaleImage,
+        imageConverter,
     };
 
     return (

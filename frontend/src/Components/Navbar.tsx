@@ -36,7 +36,7 @@ const Navbar = () => {
         { name: "Change Background", icon: Palette, href: "/change-background" },
         { name: "Enhance Resolution", icon: Zap, href: "/image-upscale" },
         { name: "Remove Objects", icon: Eraser, href: "/editor?tool=remove-objects" },
-        { name: "Convert Format", icon: RefreshCw, href: "/editor?tool=convert-format" },
+        { name: "Convert Format", icon: RefreshCw, href: "/convert-formate" },
     ]
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur bg-background/95">
@@ -96,9 +96,9 @@ const Navbar = () => {
                     <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
                         Contact
                     </Link>
-                    {/* <Button onClick={printToken} variant="link" size="sm" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Button onClick={printToken} variant="link" size="sm" className="text-sm font-medium hover:text-primary transition-colors">
                         get token
-                    </Button> */}
+                    </Button>
                 </div>
 
                 {/* Desktop Auth Buttons */}

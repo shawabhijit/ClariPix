@@ -15,6 +15,7 @@ import ImageBgRemover from "./pages/BgRemove"
 import ResultPage from "./pages/ResultPage"
 import ImageUpscale  from "./pages/ImageUpscale"
 import UpscaleResult from "./pages/UpscaleResult"
+import ImageFormatter from "./pages/ImageFormatter"
 
 function App() {
 
@@ -80,6 +81,16 @@ function App() {
             <>
               <SignedIn>
                 <ImageUpscale />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
+          <Route path="/convert-formate" element={
+            <>
+              <SignedIn>
+                <ImageFormatter />
               </SignedIn>
               <SignedOut>
                 <RedirectToSignIn />
