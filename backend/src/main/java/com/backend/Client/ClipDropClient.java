@@ -25,7 +25,7 @@ public interface ClipDropClient {
     byte[] imageUpscale(
             @RequestHeader("x-api-key") String apikey,
             @RequestPart("image_file") MultipartFile file,
-            @RequestPart(name = "target_width" , value = "1460") Integer target_width,
-            @RequestPart(name = "target_height" , value = "1280") Integer target_height
+            @RequestPart("target_width") Integer target_width,
+            @RequestPart("target_height") Integer target_height
     );
 }

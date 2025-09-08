@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/webhooks/**").permitAll()
                         .requestMatchers("/api/ai/**").permitAll()
                         .requestMatchers("/api/history/**").permitAll()
+                        .requestMatchers("/api/convert/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

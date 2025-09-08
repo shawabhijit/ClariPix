@@ -119,6 +119,13 @@
             <version>2.9.0</version>
         </dependency>
 
+        <!-- im4java wrapper for ImageMagick -->
+        <dependency>
+            <groupId>org.im4java</groupId>
+            <artifactId>im4java</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
