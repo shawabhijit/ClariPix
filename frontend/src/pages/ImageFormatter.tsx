@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, Settings, Image as ImageIcon, ArrowLeft, Sparkles } from "lucide-react";
 import { Button } from "@/Components/ui/button";
@@ -7,11 +7,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/Components/ui/slider";
 import { toast } from "react-hot-toast";
 import { ImageUpload } from "@/Components/ImageUpload";
+import { Commet } from "react-loading-indicators";
+import { AppContext } from "@/context/AppContext";
 
 export const ImageFormatter = () => {
     const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string>("");
+    const [previewUrl, setPreviewUrl] = useState<string | boolean>("");
     const [isProcessing, setIsProcessing] = useState(false);
     const [ispreset, setIsPreset] = useState<string>("Original");
     const [formatSettings, setFormatSettings] = useState({
@@ -22,9 +24,13 @@ export const ImageFormatter = () => {
         maintainAspectRatio: true
     });
 
+    const appContext = useContext(AppContext);
+    const imageConverter = appContext?.imageConverter;
+    const resultImage = appContext?.resultImage;
+
     const formatOptions = [
         { value: "png", label: "PNG" },
-        { value: "jpg", label: "JPEG" },
+        { value: "jpeg", label: "JPEG" },
         { value: "webp", label: "WebP" },
         { value: "gif", label: "GIF" }
     ];
@@ -61,16 +67,18 @@ export const ImageFormatter = () => {
             toast.error("Please upload an image first.");
             return;
         }
-        setIsProcessing(true);
-        // Simulate processing
-        setTimeout(() => {
-            setIsProcessing(false);
-            toast.success("Image formatted successfully!");
-        }, 2000);
+        setIsProcessing(true);  
+        try {
+            imageConverter?.(selectedImage, formatSettings.format, formatSettings.quality[100], formatSettings.width[0], formatSettings.height[0])
+        }
+        catch (error) {
+            console.error("Error formatting image:", error);
+            toast.error("Failed to format image. Please try again.");
+        }
     };
 
     const handleDownload = () => {
-        if (!previewUrl) return;
+        if (!previewUrl || typeof previewUrl !== 'string') return;
         // Create download link
         const link = document.createElement('a');
         link.href = previewUrl;
@@ -80,6 +88,13 @@ export const ImageFormatter = () => {
         toast.success("Download started!");
     };
 
+    useEffect(() => {
+        if (resultImage) {
+            setPreviewUrl(resultImage);
+            setIsProcessing(false);
+            toast.success("Image formatted successfully!");
+        }
+    } , [resultImage]);
     return (
         <div className="min-h-screen relative ">
             <div className="container mx-auto px-4 py-8 ">
@@ -139,20 +154,15 @@ export const ImageFormatter = () => {
                                     <div className="relative bg-muted/10 rounded-lg overflow-hidden">
                                         <div className="">
                                             <img
-                                                src={previewUrl}
+                                                src={previewUrl as string}
                                                 alt="Preview"
                                                 className="object-contain rounded-2xl w-full h-full"
                                             />
                                         </div>
-
+                                        
                                         {isProcessing && (
-                                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm">
-                                                <div className="text-center text-white">
-                                                    <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-primary flex items-center justify-center animate-glow-pulse">
-                                                        <Sparkles className="w-6 h-6" />
-                                                    </div>
-                                                    <p>Formatting image...</p>
-                                                </div>
+                                            <div className="absolute inset-0 backdrop-blur-sm p-2 cursor-pointer hover:scale-110 transition-transform flex items-center justify-center text-sm text-white font-medium">
+                                                <Commet color={["#093a09", "#106610", "#179217", "#1ebe1e"]} />
                                             </div>
                                         )}
                                     </div>

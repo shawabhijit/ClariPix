@@ -22,14 +22,14 @@ type AppContextType = {
     history?: any[];
     setHistory?: Dispatch<SetStateAction<any[]>>;
     getAllUserHistory?: () => {};
-    saveUserHistory?: ({image, sorceType}: {image: string,sorceType: string}) => {};
+    saveUserHistory?: ({ image, sorceType }: { image: string, sorceType: string }) => {};
     deleteUserHistory?: (image: string) => {};
-    bgChnageUsingPrompt?: (selectedImage : any , prompt : string | null) => {};
-    bgChnageUsingImage?: (selectedImage : any , bgImage : any , bgImageurl : any) => {};
+    bgChnageUsingPrompt?: (selectedImage: any, prompt: string | null) => {};
+    bgChnageUsingImage?: (selectedImage: any, bgImage: any, bgImageurl: any) => {};
     bgChanged?: boolean;
     setBgChanged?: Dispatch<SetStateAction<boolean>>;
     upScaleImage?: (selectedImage: any) => {};
-    imageConverter?: (selectedImage : any , format : string , preset : number , quality : number) => {};
+    imageConverter?: (selectedImage: any, format: string, quality: number, width: number, height: number) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -86,7 +86,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const bgChnageUsingPrompt = async (selectedImage:any , prompt : string|null) => {
+    const bgChnageUsingPrompt = async (selectedImage: any, prompt: string | null) => {
         try {
 
             if (!isSignedIn) {
@@ -99,11 +99,11 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             const token = await getToken();
 
             const formdata = new FormData();
-            selectedImage && formdata.append("file" , selectedImage);
-            prompt && formdata.append("prompt" , prompt);
+            selectedImage && formdata.append("file", selectedImage);
+            prompt && formdata.append("prompt", prompt);
 
-            const { data: base64Image } = await axios.post(backendUrl + "/images/replace-background_prompt" , formdata , {
-                headers : {
+            const { data: base64Image } = await axios.post(backendUrl + "/images/replace-background_prompt", formdata, {
+                headers: {
                     Authorization: `Bearer ${token}`,
                 }
             })
@@ -116,28 +116,28 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const bgChnageUsingImage = async (selectedImage:any , bgImage : any , bgImageurl : any) => {
+    const bgChnageUsingImage = async (selectedImage: any, bgImage: any, bgImageurl: any) => {
         try {
             if (!isSignedIn) {
                 return openSignIn();
             }
             setImage(selectedImage);
             setResultImage(false);
-            
+
             const token = await getToken();
 
             const formdata = new FormData();
-            selectedImage && formdata.append("image" , selectedImage);
-            bgImage && formdata.append("bg_image" , bgImage);
-            bgImageurl && formdata.append("bg_image_url" , bgImageurl);
+            selectedImage && formdata.append("image", selectedImage);
+            bgImage && formdata.append("bg_image", bgImage);
+            bgImageurl && formdata.append("bg_image_url", bgImageurl);
 
-            const response = await axios.post(backendUrl + "/images/replace-background_image" , formdata , {
-                headers : {
+            const response = await axios.post(backendUrl + "/images/replace-background_image", formdata, {
+                headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
                 }
             })
-            console.log("Response from bg change using image .." , response);
+            console.log("Response from bg change using image ..", response);
 
             if (response.data) {
                 setResultImage(response?.data?.data.url);
@@ -163,17 +163,17 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             setIsGenerating(true);
 
             const formdata = new FormData();
-            selectedImage && formdata.append("image_file" , selectedImage);
+            selectedImage && formdata.append("image_file", selectedImage);
 
             navigate("/ai/upscale-result");
 
-            const response = await axios.post(backendUrl + "/images/image-upscale" , formdata ,{
-                headers : {
+            const response = await axios.post(backendUrl + "/images/image-upscale", formdata, {
+                headers: {
                     Authorization: `Bearer ${token}`,
                 },
                 responseType: "blob",
             })
-            console.log("Response from image upscaler .." , response);
+            console.log("Response from image upscaler ..", response);
 
             if (response.data) {
                 const url = URL.createObjectURL(response?.data);
@@ -187,27 +187,35 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const imageConverter = async (selectedImage : any , format : string , preset : number , quality : number) => {
+    const imageConverter = async (selectedImage: any, format: string, quality: number, width: number, height: number) => {
         try {
             if (!isSignedIn) {
                 return openSignIn();
             }
             const token = await getToken();
             setResultImage(false);
-            setIsGenerating(true);
             const formdata = new FormData();
-            selectedImage && formdata.append("file" , selectedImage);
-            formdata.append("format" , format);
+            selectedImage && formdata.append("file", selectedImage);
+            formdata.append("format", format);
             // formdata.append("preset" , preset.toString());
             // formdata.append("quality" , quality.toString());
 
-            const {data : base64Image} = await axios.post(backendUrl + "/conver/images" , formdata , {
-                headers : {
-                    Authorization: `Bearer ${token}`,
+            const { data: arrayBuffer } = await axios.post(
+                backendUrl + "/convert/images",
+                formdata,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                    responseType: "arraybuffer", // IMPORTANT for raw bytes
                 }
-            })
-            console.log("Response from image converter .." , base64Image);
-            setResultImage(`data:image/png;base64,${base64Image}`);
+            );
+            console.log("Response from image converter ..", arrayBuffer);
+
+            let mimeType = `image/${format.toLowerCase()}`;
+
+            const blob = new Blob([arrayBuffer], { type: mimeType });
+            const objectUrl = URL.createObjectURL(blob);
+
+            setResultImage(objectUrl);
         }
         catch (error) {
             console.error("Error converting image:", error);
@@ -242,7 +250,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const getAIGeneratedImages = async (inference_id: string , token : string | null) => {
+    const getAIGeneratedImages = async (inference_id: string, token: string | null) => {
         let attempt = 0;
         const maxAttempts = 10; // Maximum number of attempts
 
@@ -282,7 +290,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
             const token = await getToken();
 
-            const response = await axios.get(backendUrl + `/history/get?clerkId=${user?.id}` , {
+            const response = await axios.get(backendUrl + `/history/get?clerkId=${user?.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -297,7 +305,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const saveUserHistory = async ({image, sorceType}: {image: string,sorceType: string}) => {
+    const saveUserHistory = async ({ image, sorceType }: { image: string, sorceType: string }) => {
         try {
             if (!isSignedIn) {
                 return openSignIn();
@@ -312,7 +320,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                 image: image,
                 imageType: imageType,
                 sourceType: sorceType,
-            } , {
+            }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
