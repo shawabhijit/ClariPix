@@ -28,4 +28,10 @@ public interface ClipDropClient {
             @RequestPart("target_width") Integer target_width,
             @RequestPart("target_height") Integer target_height
     );
+
+    @PostMapping(value = "/remove-text/v1" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    byte[] removeTextFromImage(
+            @RequestHeader("x-api-key") String apiKey,
+            @RequestPart("image_file") MultipartFile imageFile
+    );
 }

@@ -2,13 +2,22 @@ package com.backend.Service.Impl;
 
 import com.backend.Client.ChangeBackgroundClient;
 import com.backend.Client.ClipDropClient;
+import com.backend.DTO.UserDto;
+import com.backend.Exceptions.UserException;
 import com.backend.Response.ChangeBgByImageResponse;
 import com.backend.Response.PicsartErrorResponse;
 import com.backend.Response.PicsartResponse;
+import com.backend.Response.RemoveBgResponse;
 import com.backend.Service.ImageEnhanceAIService;
+import com.backend.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +37,8 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
     String picsartApiKey;
 
     private final ClipDropClient clipDropClient;
-
     private final ChangeBackgroundClient changeBackgroundClient;
+    private final UserService userService;
 
     @Override
     public byte[] removeBackground(MultipartFile file) {
@@ -50,6 +59,27 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
                 target_width,
                 target_height
         );
+    }
+
+    @Override
+    public byte[] removeTextFromImage(MultipartFile file) throws UserException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth.getName() == null || auth.getName().isEmpty()) {
+            throw new UserException("You don't have permission to remove text from the image.");
+        }
+        UserDto user = userService.getUserByClerkId(auth.getName());
+        // Validation : if exits and have credits
+        if (user.getCredits() == 0) {
+            throw new UserException("You don't have enough credits to remove text from the image.");
+        }
+        byte[] imageBytes =  clipDropClient.removeTextFromImage(clipDropApiKey , file);
+
+        if (imageBytes != null) {
+            user.setCredits(user.getCredits() - 1);
+            userService.saveUser(user);
+        }
+        return imageBytes;
     }
 
     @Override

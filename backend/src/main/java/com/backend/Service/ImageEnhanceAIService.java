@@ -1,7 +1,9 @@
 package com.backend.Service;
 
+import com.backend.Exceptions.UserException;
 import com.backend.Response.ChangeBgByImageResponse;
 import com.backend.Response.PicsartResponse;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,6 +13,7 @@ public interface ImageEnhanceAIService {
     byte[] removeBackground(MultipartFile file);
     byte[] replaceBackgroundWithPrompt(MultipartFile file , String prompt);
     byte[] imageUpscale(MultipartFile file , Integer width , Integer height);
+    byte[] removeTextFromImage(MultipartFile file) throws UserException;
 
     ChangeBgByImageResponse changeBackground(
             MultipartFile image,

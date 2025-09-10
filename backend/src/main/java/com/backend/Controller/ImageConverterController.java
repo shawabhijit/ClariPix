@@ -45,21 +45,19 @@ public class ImageConverterController {
             byte[] inputFile = file.getBytes();
 
             // Convert the image
-            byte[] outputFile = imageConverterService.convertFormat(inputFile, format.toLowerCase());
-
-            String base64Image = Base64.getEncoder().encodeToString(outputFile);
+            byte[] outputBytes = imageConverterService.convertFormat(inputFile, format.toLowerCase());
 
             // Set appropriate headers for binary data
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(getMediaTypeForFormat(format));
-            headers.setContentLength(outputFile.length);
+            headers.setContentLength(outputBytes.length);
             headers.setContentDispositionFormData("attachment",
                     "converted." + format.toLowerCase());
             headers.setCacheControl("no-cache");
 
             return ResponseEntity.ok()
                     .headers(headers)
-                    .body(base64Image);
+                    .body(outputBytes);
 
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,6 +1,7 @@
 package com.backend.Controller;
 
 import com.backend.DTO.UserDto;
+import com.backend.Exceptions.UserException;
 import com.backend.Request.PicsartRequest;
 import com.backend.Response.ChangeBgByImageResponse;
 import com.backend.Response.PicsartResponse;
@@ -182,6 +183,13 @@ public class ImageEnhancerController {
                             .build()
             );
         }
+    }
+
+    @PostMapping("/remove-text")
+    public ResponseEntity<?> removeTextFromImageHandler(@RequestParam("image_file") MultipartFile imageFile) throws UserException {
+        byte[] imageBytes = imageEnhanceAIService.removeTextFromImage(imageFile);
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.TEXT_PLAIN).body(base64Image);
     }
 
     @PostMapping("/image-upscale")
