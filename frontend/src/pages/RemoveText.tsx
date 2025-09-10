@@ -2,19 +2,22 @@ import SpecificFeatureSection from "@/Components/SpecificFeatureSection";
 import TipsSection from "@/Components/TipsSection";
 import { Button } from "@/Components/ui/button"
 import UseCases from "@/Components/UseCases";
-import { ArrowLeft, Check, Download, ImageIcon, Shield, Sparkles, Star, Type, Upload, Zap } from "lucide-react"
-import { useRef, useState } from "react";
+import { AppContext } from "@/context/AppContext";
+import { base64ToFile, uploadToCloudninary } from "@/util/Cloudinary";
+import { ArrowLeft, Check, Download, Edit3, ImageIcon, Save, Shield, Sparkles, Star, Type, Upload, Zap } from "lucide-react"
+import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { Commet } from "react-loading-indicators";
 import { useNavigate } from "react-router-dom";
 
 
 const RemoveText = () => {
-    const navigate = useNavigate();
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [processedImage, setProcessedImage] = useState<string | null>(null);
-    const [isProcessing, setIsProcessing] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [dragActive, setDragActive] = useState(false);
+
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const navigate = useNavigate();
+    const appContext = useContext(AppContext);
 
     const sampleImages = [
         {
@@ -62,16 +65,12 @@ const RemoveText = () => {
         }
     ];
 
+
     const handleFiles = (files: File[]) => {
         const file = files[0];
         if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const result = e.target?.result as string;
-                setSelectedImage(result);
-                setProcessedImage(null);
-            };
-            reader.readAsDataURL(file);
+            setSelectedImage(file);
+            appContext?.setResultImage?.(false);
         } else {
             toast.error("Please upload a valid image file.");
         }
@@ -79,6 +78,13 @@ const RemoveText = () => {
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
+        console.log("Extension:", files[0].name.split('.').pop()?.toLowerCase());
+        const extension = files[0].name.split('.').pop()?.toLowerCase();
+        if (extension && !['jpg', 'jpeg', 'png'].includes(extension)) {
+            toast.error("Unsupported file format. Please upload JPG, PNG images.");
+            return;
+        }
+        setSelectedImage(null);
         if (files.length > 0) {
             handleFiles(files);
         }
@@ -89,26 +95,22 @@ const RemoveText = () => {
             toast.error("Please upload an image first.");
             return;
         }
-        setIsProcessing(true);
-        // Simulate AI processing with a timeout
-        setTimeout(() => {
-            // For demo purposes, we'll just use the original image as "processed"
-            setProcessedImage(selectedImage);
-            setIsProcessing(false);
-            toast.success("Text removed successfully!");
-        }, 3000);
+        appContext?.removeText?.(selectedImage);
     }
 
-    const handleSampleImageClick = (url: string) => {
-        // Logic to handle sample image click
-        console.log("Sample image clicked:", url);
+    const handleSampleImageClick = async (url: string) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const image = new File([blob], "sample-image.jpg", { type: "image/jpeg" });
+        setSelectedImage(image);
+        //console.log("Sample image clicked:", url);
     }
 
     const handleDownload = () => {
-        if (processedImage) {
+        if (appContext?.resultImage) {
             // Create download link
             const link = document.createElement('a');
-            link.href = processedImage;
+            link.href = appContext?.resultImage as string;
             link.download = 'text-removed-image.png';
             document.body.appendChild(link);
             link.click();
@@ -137,6 +139,30 @@ const RemoveText = () => {
         if (files.length > 0) {
             handleFiles(files);
         }
+    };
+
+    const handleSave = async () => {
+        if (!appContext?.resultImage || !appContext) return;
+        const file = base64ToFile(appContext?.resultImage as string, "text-removed.png");
+        if (!file) {
+            return toast.error("Failed to convert image for saving.");
+        }
+        const url = await uploadToCloudninary(file);
+        if (!url) {
+            return toast.error("Failed to upload image. Please try again.");
+        }
+        appContext?.saveUserHistory?.({ image: url, sorceType: "bg-remove" });
+    };
+
+    const handleEdit = () => {
+        if (!appContext?.resultImage || !appContext) return;
+
+        appContext?.setEditImage?.(null);
+        if (appContext?.resultImage) {
+            appContext.setEditImage?.(appContext?.resultImage as string);
+            navigate("/editor");
+        }
+        toast("Opening editor...", { icon: "🖌️" });
     };
 
     return (
@@ -195,8 +221,8 @@ const RemoveText = () => {
                             {/* Upload Zone */}
                             <div
                                 className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer ${dragActive
-                                        ? 'border-primary bg-primary/10 scale-105'
-                                        : 'border-primary/30 hover:border-primary hover:bg-primary/5'
+                                    ? 'border-primary bg-primary/10 scale-105'
+                                    : 'border-primary/30 hover:border-primary hover:bg-primary/5'
                                     }`}
                                 onDragEnter={handleDrag}
                                 onDragLeave={handleDrag}
@@ -219,7 +245,7 @@ const RemoveText = () => {
                                     <div>
                                         <p className="font-semibold text-foreground">Click, paste, or drop files here</p>
                                         <p className="text-sm text-muted-foreground mt-1">
-                                            JPG, PNG, GIF, WEBP up to 10MB
+                                            JPG, PNG up to 20MB
                                         </p>
                                     </div>
                                 </div>
@@ -257,39 +283,21 @@ const RemoveText = () => {
                     </div>
 
                     {/* Preview Area - Right Columns */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-2 space-y-6 h-full">
                         {selectedImage ? (
-                            <div className="bg-primary/10 hover:bg-primary/15 p-6 rounded-2xl">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-xl font-semibold flex items-center">
-                                        <ImageIcon className="h-6 w-6 mr-2 text-primary" />
-                                        Before & After Comparison
-                                    </h3>
-                                    {processedImage && (
-                                        <Button
-                                            onClick={handleDownload}
-                                            variant="outline"
-                                            size="sm"
-                                            className="glass-card"
-                                        >
-                                            <Download className="h-4 w-4 mr-2" />
-                                            Download
-                                        </Button>
-                                    )}
-                                </div>
-
+                            <div className="bg-primary/10 hover:bg-primary/15 p-6 rounded-2xl h-full flex flex-col justify-between relative">
                                 <div className="grid md:grid-cols-2 gap-6 mb-6">
                                     {/* Original Image */}
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
                                             <p className="font-semibold text-foreground">Original</p>
-                                            <span className="text-xs bg-muted px-2 py-1 rounded-full">WITH TEXT</span>
+                                            <span className="text-xs bg-muted font-semibold px-2 py-1 rounded-full">WITH TEXT</span>
                                         </div>
-                                        <div className="relative group overflow-hidden rounded-xl border-2 border-border">
+                                        <div className="relative w-full h-80 overflow-hidden rounded-xl border-2 border-border">
                                             <img
-                                                src={selectedImage}
+                                                src={selectedImage && URL.createObjectURL(selectedImage)}
                                                 alt="Original with text"
-                                                className="w-full h-64 object-cover transition-transform group-hover:scale-105"
+                                                className="w-full h-full object-cover transition-transform group-hover:scale-105"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         </div>
@@ -299,27 +307,23 @@ const RemoveText = () => {
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
                                             <p className="font-semibold text-foreground">AI Processed</p>
-                                            <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full">TEXT FREE</span>
+                                            <span className="text-xs bg-primary/20 text-white font-semibold px-2 py-1 rounded-full">TEXT FREE</span>
                                         </div>
-                                        <div className="relative group overflow-hidden rounded-xl border-2 border-border">
-                                            {processedImage ? (
+                                        <div className="relative w-full h-80 group overflow-hidden rounded-xl border-2 border-border">
+                                            {appContext?.resultImage ? (
                                                 <>
                                                     <img
-                                                        src={processedImage}
+                                                        src={appContext?.resultImage as string}
                                                         alt="Text removed"
-                                                        className="w-full h-64 object-cover transition-transform group-hover:scale-105"
+                                                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
                                                     />
                                                     <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                                 </>
                                             ) : (
-                                                <div className="w-full h-64 bg-muted/20 border-2 border-dashed border-muted-foreground/20 rounded-xl flex items-center justify-center">
-                                                    {isProcessing ? (
-                                                        <div className="flex flex-col items-center space-y-3">
-                                                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
-                                                            <div className="text-center">
-                                                                <p className="font-semibold text-foreground">Processing your image...</p>
-                                                                <p className="text-sm text-muted-foreground">AI is removing text elements</p>
-                                                            </div>
+                                                <div className="w-full h-80 bg-muted/20 border-2 border-dashed border-muted-foreground/20 rounded-xl flex items-center justify-center">
+                                                    {appContext?.isGenerating ? (
+                                                        <div className="absolute inset-0 backdrop-blur-sm p-2 cursor-pointer hover:scale-110 transition-transform flex items-center justify-center text-sm text-white font-medium">
+                                                            <Commet color={["#093a09", "#106610", "#179217", "#1ebe1e"]} />
                                                         </div>
                                                     ) : (
                                                         <div className="text-center space-y-2">
@@ -335,25 +339,60 @@ const RemoveText = () => {
 
                                 {/* Action Button */}
                                 <div className="text-center">
-                                    <Button
-                                        onClick={handleRemoveText}
-                                        disabled={isProcessing}
-                                        variant="secondary"
-                                        size="lg"
-                                        className="px-8 py-3 text-lg font-semibold"
-                                    >
-                                        {isProcessing ? (
-                                            <>
-                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
-                                                Processing Magic...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Sparkles className="h-5 w-5 mr-3" />
-                                                Remove Text with AI
-                                            </>
-                                        )}
-                                    </Button>
+                                    {
+                                        !appContext?.resultImage ? (
+                                            <Button
+                                                onClick={handleRemoveText}
+                                                disabled={appContext?.isGenerating}
+                                                variant="secondary"
+                                                size="lg"
+                                                className="px-8 py-3 text-lg font-semibold"
+                                            >
+                                                {appContext?.isGenerating ? (
+                                                    <>
+                                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
+                                                        Processing Magic...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Sparkles className="h-5 w-5 mr-3" />
+                                                        Remove Text with AI
+                                                    </>
+                                                )}
+                                            </Button>
+                                        ) :
+                                            (
+                                                <div className="flex flex-wrap justify-center gap-4">
+                                                    <Button
+                                                        variant="secondary"
+                                                        size="lg"
+                                                        onClick={handleSave}
+                                                        className=""
+                                                    >
+                                                        <Save className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+                                                        Save
+                                                    </Button>
+                                                    <Button
+                                                        variant="secondary"
+                                                        size="lg"
+                                                        onClick={handleEdit}
+                                                        className=""
+                                                    >
+                                                        <Edit3 className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+                                                        Edit
+                                                    </Button>
+                                                    <Button
+                                                        variant="secondary"
+                                                        size="lg"
+                                                        onClick={handleDownload}
+                                                        className=""
+                                                    >
+                                                        <Download className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+                                                        Download
+                                                    </Button>
+                                                </div>
+                                            )
+                                    }
                                 </div>
                             </div>
                         ) : (

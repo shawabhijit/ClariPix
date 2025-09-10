@@ -30,6 +30,7 @@ type AppContextType = {
     setBgChanged?: Dispatch<SetStateAction<boolean>>;
     upScaleImage?: (selectedImage: any) => {};
     imageConverter?: (selectedImage: any, format: string, quality: number, width: number, height: number) => {};
+    removeText?: (selectedImage : any ) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -368,7 +369,31 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+    const removeText = async (selectedImage : any ) => {
+        try {
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+            setResultImage(false);
+            setIsGenerating(true);
 
+            const token = await getToken();
+            const formData = new FormData();
+            selectedImage && formData.append("image_file", selectedImage);
+            const { data: base64Image } = await axios.post(backendUrl + "/images/remove-text", formData , {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            console.log("Response from text remover ..", base64Image);
+            setResultImage(`data:image/png;base64,${base64Image}`);
+            setIsGenerating(false);
+        }
+        catch (error) {
+            console.error("Error removing text from image:", error);
+            toast.error("Error removing text from image. Please try again.");
+        }
+    }
 
     const contextValue: AppContextType = {
         backendUrl,
@@ -396,6 +421,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         setBgChanged,
         upScaleImage,
         imageConverter,
+        removeText,
     };
 
     return (
