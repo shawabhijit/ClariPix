@@ -31,8 +31,8 @@ const HeroSections = () => {
         },
         {
             icon: Eraser,
-            name: "Remove Objects",
-            description: "Seamlessly remove unwanted items",
+            name: "Remove Text",
+            description: "Seamlessly erase unwanted text",
             gradient: "from-green-500 to-emerald-600",
         },
         {

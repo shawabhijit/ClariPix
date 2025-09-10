@@ -70,7 +70,7 @@ const Features = () => {
         {
             id: "convert-format",
             icon: RefreshCw,
-            title: "Convert Format",
+            title: "Convert Format for FREE",
             description: "Easily convert images between JPG, PNG, WebP, and other popular formats in seconds. Maintain maximum quality while optimizing file sizes for faster web performance. With batch conversion support, ClariPix helps you save time while preparing images for websites, social media, or professional use.",
             gradient: "from-emerald-500 to-green-600",
             demo: "",
@@ -85,15 +85,15 @@ const Features = () => {
         {
             id: "remove-objects",
             icon: Eraser,
-            title: "Remove Objects",
-            description: "Effortlessly erase unwanted objects, people, text, or blemishes from your photos. ClariPix uses AI-powered content-aware fill to reconstruct the missing area naturally, leaving no traces behind. Whether it’s for real estate photos, product shots, or personal edits, your images will look clean and professional.",
+            title: "Remove Text",
+            description: "Seamlessly erase unwanted text, captions, or watermarks from your photos. ClariPix’s AI-powered content-aware fill intelligently rebuilds the background where the text was, ensuring a natural, polished result. Perfect for cleaning up images for presentations, e-commerce, or personal use.",
             gradient: "from-green-500 to-emerald-600",
-            demo: "https://res.cloudinary.com/dvkvr88db/video/upload/v1756131443/cleanup-demo_a9exu0.mp4",
+            demo: "https://res.cloudinary.com/dvkvr88db/video/upload/v1757485902/remove-text-demo_pltxsc.mp4",
             details: [
-                "Remove people, objects, and watermarks",
-                "AI fills background naturally",
-                "Works on text, logos, or blemishes",
-                "Smooth, professional results",
+                "Remove text, captions, and watermarks",
+                "AI restores background realistically",
+                "Works on logos, stamps, or overlays",
+                "Delivers clean, professional images",
             ],
         }
     ]

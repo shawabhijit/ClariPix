@@ -16,6 +16,7 @@ import ResultPage from "./pages/ResultPage"
 import ImageUpscale  from "./pages/ImageUpscale"
 import UpscaleResult from "./pages/UpscaleResult"
 import ImageFormatter from "./pages/ImageFormatter"
+import RemoveText from "./pages/RemoveText"
 
 function App() {
 
@@ -81,6 +82,16 @@ function App() {
             <>
               <SignedIn>
                 <ImageUpscale />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          } />
+          <Route path="/remove-text" element={
+            <>
+              <SignedIn>
+                <RemoveText />
               </SignedIn>
               <SignedOut>
                 <RedirectToSignIn />

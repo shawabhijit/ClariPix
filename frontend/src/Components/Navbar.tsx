@@ -35,7 +35,7 @@ const Navbar = () => {
         { name: "Remove Background", icon: Scissors, href: "/remove-bg" },
         { name: "Change Background", icon: Palette, href: "/change-background" },
         { name: "Enhance Resolution", icon: Zap, href: "/image-upscale" },
-        { name: "Remove Objects", icon: Eraser, href: "/editor?tool=remove-objects" },
+        { name: "Remove Text", icon: Eraser, href: "/remove-text" },
         { name: "Convert Format", icon: RefreshCw, href: "/convert-formate" },
     ]
     return (
