@@ -3,6 +3,7 @@ import { Card, CardContent } from './ui/card'
 import { Button } from './ui/button'
 // import { Link } from 'react-router-dom'
 import { Badge } from './ui/badge'
+import { Link } from 'react-router-dom'
 
 const Features = () => {
 
@@ -20,6 +21,7 @@ const Features = () => {
                 "Supports transparent PNG output",
                 "Instant, one-click processing",
             ],
+            navigate: "/remove-bg"
         },
         {
             id: "Photo Editor",
@@ -37,6 +39,7 @@ const Features = () => {
                 "75+ AI filters for social media creatives",
                 "Add stickers, shapes, and stylish text",
             ],
+            navigate: "/editor"
         },
         {
             id: "change-bg",
@@ -51,6 +54,7 @@ const Features = () => {
                 "AI-powered lighting and shadow adjustment",
                 "Seamless blending without visible edges",
             ],
+            navigate: "/change-background"
         },
         {
             id: "enhance-resolution",
@@ -66,6 +70,7 @@ const Features = () => {
                 "Preserves facial details and textures",
                 "Perfect for print and digital use",
             ],
+            navigate: "/image-upscale"
         },
         {
             id: "convert-format",
@@ -81,6 +86,7 @@ const Features = () => {
                 "Optimized for web performance",
                 "No loss of image quality",
             ],
+            navigate: "/convert-formate"
         },
         {
             id: "remove-objects",
@@ -95,6 +101,7 @@ const Features = () => {
                 "Works on logos, stamps, or overlays",
                 "Delivers clean, professional images",
             ],
+            navigate: "/remove-text"
         }
     ]
 
@@ -182,10 +189,10 @@ const Features = () => {
 
                                     <div className="flex gap-3 pt-4">
                                         <Button size="lg" className="gradient-primary text-white border-0 group cursor-pointer">
-                                            {/* <Link to="/editor"> */}
-                                            Try Now
-                                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                                            {/* </Link> */}
+                                            <Link to={feature.navigate} className="flex items-center">
+                                                Try Now
+                                                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                            </Link>
                                         </Button>
                                         <Button variant="outline" className='cursor-pointer'>Learn More</Button>
                                     </div>

@@ -6,16 +6,7 @@ interface SampleImage {
     description: string;
 }
 
-const UseCases = ({sampleImages} : {sampleImages: SampleImage[]}) => {
-
-    const useCases = [
-        "Remove watermarks from stock photos",
-        "Clean up social media screenshots",
-        "Eliminate unwanted text from product images",
-        "Remove signatures from documents",
-        "Clean up memes and viral images",
-        "Delete timestamps from photos"
-    ];
+const UseCases = ({sampleImages , useCases} : {sampleImages: SampleImage[] , useCases : string[]}) => {
 
     return (
         <div className="bg-primary/10 hover:bg-primary/15 p-8 rounded-2xl">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Save, Edit3, ArrowLeft, Sparkles, Plus, Wand2 } from "lucide-react";
+import { Download, Save, Edit3, ArrowLeft, Plus, Wand2 } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import toast from "react-hot-toast";
 import { AppContext } from "@/context/AppContext";

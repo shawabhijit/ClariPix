@@ -7,11 +7,11 @@ import { AppContext } from "@/context/AppContext"
 
 const Navbar = () => {
 
-    const {openSignIn , openSignUp} = useClerk();
-    const {user } = useUser();
-    const {getToken} = useAuth();
+    const { openSignIn, openSignUp } = useClerk();
+    const { user } = useUser();
+    const { getToken } = useAuth();
 
-    const {setEditImage} = useContext(AppContext) || {}
+    const { setEditImage, nitro } = useContext(AppContext) || {}
 
     const printToken = async () => {
         const token = await getToken();
@@ -96,9 +96,9 @@ const Navbar = () => {
                     <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
                         Contact
                     </Link>
-                    <Button onClick={printToken} variant="link" size="sm" className="text-sm font-medium hover:text-primary transition-colors">
+                    {/* <Button onClick={printToken} variant="link" size="sm" className="text-sm font-medium hover:text-primary transition-colors">
                         get token
-                    </Button>
+                    </Button> */}
                 </div>
 
                 {/* Desktop Auth Buttons */}
@@ -112,10 +112,16 @@ const Navbar = () => {
                         </Button>
                     </SignedOut>
                     <SignedIn>
-                        <p className="pr-3 font-bold ">
-                            Hi, {user?.fullName}
-                        </p>
-                        <UserButton />
+                        <div className="flex gap-4 items-center">
+                            {
+                                nitro && <span className="inline-flex items-center px-5 py-1 rounded-2xl
+    bg-gradient-to-r from-green-500 via-black to-green-600 font-semibold shadow-lg hover:shadow-xl 
+    hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer text-white text-sm">
+                                    🌟 {nitro} Nitro left
+                                </span>
+                            }
+                            <UserButton />
+                        </div>
                     </SignedIn>
                 </div>
 
@@ -136,6 +142,11 @@ const Navbar = () => {
                             <p className="font-bold ">
                                 {user?.fullName}
                             </p>
+                            <span className="inline-flex items-center px-5 py-1 rounded-2xl 
+    bg-gradient-to-r from-green-500 via-black to-green-600 font-semibold shadow-lg hover:shadow-xl 
+    hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer text-white text-sm">
+                                🌟 {nitro} Nitro left
+                            </span>
                         </div>
                         <div className="space-y-2">
                             <span className="block text-sm font-medium text-muted-foreground">AI Tools</span>

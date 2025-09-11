@@ -3,7 +3,7 @@ import { ArrowRight, Eraser, Palette, Play, RefreshCw, Scissors, Sparkles, Star,
 import { Button } from './ui/button'
 // import { Link } from 'react-router-dom'
 import { Card, CardContent } from './ui/card'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import LaptopMockup from './LaptopMockup'
 import { motion } from "framer-motion"
 
@@ -16,32 +16,39 @@ const HeroSections = () => {
             name: "Remove Background",
             description: "AI-powered background removal",
             gradient: "from-emerald-500 to-teal-600",
+            navigate:"/remove-bg"
         },
         {
             icon: Palette,
             name: "Change Background",
             description: "Replace with stunning presets",
             gradient: "from-emerald-600 to-green-700",
+            navigate: "/change-background"
         },
         {
             icon: Zap,
             name: "Enhance Resolution",
             description: "Upscale images up to 4x",
             gradient: "from-teal-500 to-emerald-600",
+            navigate: "/image-upscale"
         },
         {
             icon: Eraser,
             name: "Remove Text",
             description: "Seamlessly erase unwanted text",
             gradient: "from-green-500 to-emerald-600",
+            navigate: "/remove-text"
         },
         {
             icon: RefreshCw,
             name: "Convert Format",
             description: "Convert between formats",
             gradient: "from-emerald-500 to-green-600",
+            navigate: "/convert-formate"
         },
     ]
+
+    const navigate = useNavigate();
 
     return (
         <section className="relative overflow-hidden">
@@ -134,7 +141,7 @@ const HeroSections = () => {
                             return (
                                 <Card
                                     key={index}
-                                    
+                                    onClick={() => navigate(tool.navigate)}
                                     className="group border-0 bg-primary/10 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
                                 >
                                     <CardContent className="p-2 text-center space-y-2">

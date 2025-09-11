@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 type AppContextType = {
     backendUrl: string,
+    nitro: boolean | number | string;
+    setNitro: Dispatch<SetStateAction<boolean | number | string>>;
+    getUserNitroCount?: () => {};
     image: any;
     setImage: Dispatch<SetStateAction<File | boolean>>;
     resultImage: string | boolean;
@@ -30,7 +33,7 @@ type AppContextType = {
     setBgChanged?: Dispatch<SetStateAction<boolean>>;
     upScaleImage?: (selectedImage: any) => {};
     imageConverter?: (selectedImage: any, format: string, quality: number, width: number, height: number) => {};
-    removeText?: (selectedImage : any ) => {};
+    removeText?: (selectedImage: any) => {};
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -38,10 +41,10 @@ export const AppContext = createContext<AppContextType | undefined>(undefined);
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    //console.log(backendUrl)
 
     const [image, setImage] = useState<boolean | File>(false);
     const [resultImage, setResultImage] = useState<string | boolean>(false);
+    const [nitro , setNitro] = useState<boolean | number | string>(false);
     const [generatedImages, setGeneratedImages] = useState<string[]>([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [editImage, setEditImage] = useState<string | null>(null);
@@ -54,6 +57,26 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
     const navigate = useNavigate();
 
+    const getUserNitroCount = async () => {
+        try {
+            if (!isSignedIn) {
+                return openSignIn();
+            }
+            const token = await getToken();
+            const response = await axios.get(backendUrl + `/users/${user.id}/nitroCount` , {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            console.log("User nitro count ..", response);
+            setNitro(response.data);
+        }
+        catch (error) {
+            console.error("Error fetching user nitro count:", error);
+            toast.error("Error fetching user nitro count. Please try again.");
+        }
+    }
 
     const removeBg = async (selectedImage: any) => {
         try {
@@ -83,7 +106,8 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             // setCredit((prev) => prev - 1);
         }
         catch (error) {
-            console.error("Error removing background:", error);
+            //console.error("Error removing background:", error);
+            toast.error("Error removing background. Please try again.");
         }
     }
 
@@ -112,7 +136,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             setResultImage(`data:image/png;base64,${base64Image}`);
         }
         catch (error) {
-            console.error("Error changing background by prompt:", error);
+            //console.error("Error changing background by prompt:", error);
             toast.error("Error changing background by pormpt , kindly use your personal background.")
         }
     }
@@ -138,7 +162,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                     "Content-Type": "multipart/form-data",
                 }
             })
-            console.log("Response from bg change using image ..", response);
+            //console.log("Response from bg change using image ..", response);
 
             if (response.data) {
                 setResultImage(response?.data?.data.url);
@@ -148,7 +172,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
         catch (error) {
-            console.error("Error changing background by image:", error);
+            //console.error("Error changing background by image:", error);
             toast.error("Error changing background by image , kindly use your personal background.")
         }
     }
@@ -174,7 +198,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                 },
                 responseType: "blob",
             })
-            console.log("Response from image upscaler ..", response);
+            //console.log("Response from image upscaler ..", response);
 
             if (response.data) {
                 const url = URL.createObjectURL(response?.data);
@@ -183,7 +207,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             setIsGenerating(false);
         }
         catch (error) {
-            console.error("Error upscaling image:", error);
+            //console.error("Error upscaling image:", error);
             toast.error("Error upscaling image. Please try again.");
         }
     }
@@ -238,7 +262,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("Respose from AI Image generator ..", response);
+            //console.log("Respose from AI Image generator ..", response);
 
             if (response.data.status === "ACCEPTED") {
                 let inference_id = response.data.inference_id;
@@ -246,7 +270,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
         catch (error) {
-            console.error("Error generating image:", error);
+            //console.error("Error generating image:", error);
             toast.error("Error generating image. Please try again.");
         }
     }
@@ -265,7 +289,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                 },
             }
             )
-            console.log("Images from AI Image generator ..", generatedImages.data);
+            //console.log("Images from AI Image generator ..", generatedImages.data);
 
             if (generatedImages.data.status === "FINISHED") {
                 setIsGenerating(false);
@@ -301,7 +325,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             setHistory(response.data);
         }
         catch (error) {
-            console.error("Error fetching user history:", error);
+            //console.error("Error fetching user history:", error);
             toast.error("Error fetching user history. Please try again.");
         }
     }
@@ -328,7 +352,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             });
 
             if (response.status === 200) {
-                console.log("Saved user history ..", response.data);
+                //console.log("Saved user history ..", response.data);
                 toast.success("Image saved to history.");
             }
             else {
@@ -336,7 +360,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
         catch (error) {
-            console.error("Error saving user history:", error);
+            //console.error("Error saving user history:", error);
             toast.error("Error saving user history. Please try again.");
         }
     }
@@ -354,7 +378,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             });
 
             if (response.status === 200) {
-                console.log("Deleted user history ..", response.data);
+                //console.log("Deleted user history ..", response.data);
                 // Update the local history state by removing the deleted image
                 setHistory((prevHistory) => prevHistory?.filter((item) => item.image !== image) || []);
                 toast.success("Image deleted from history.");
@@ -364,12 +388,12 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
         catch (error) {
-            console.error("Error deleting user history:", error);
+            //console.error("Error deleting user history:", error);
             toast.error("Error deleting user history. Please try again.");
         }
     }
 
-    const removeText = async (selectedImage : any ) => {
+    const removeText = async (selectedImage: any) => {
         try {
             if (!isSignedIn) {
                 return openSignIn();
@@ -380,23 +404,26 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             const token = await getToken();
             const formData = new FormData();
             selectedImage && formData.append("image_file", selectedImage);
-            const { data: base64Image } = await axios.post(backendUrl + "/images/remove-text", formData , {
+            const { data: base64Image } = await axios.post(backendUrl + "/images/remove-text", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
             })
-            console.log("Response from text remover ..", base64Image);
+            //console.log("Response from text remover ..", base64Image);
             setResultImage(`data:image/png;base64,${base64Image}`);
             setIsGenerating(false);
         }
         catch (error) {
-            console.error("Error removing text from image:", error);
+            //console.error("Error removing text from image:", error);
             toast.error("Error removing text from image. Please try again.");
         }
     }
 
     const contextValue: AppContextType = {
         backendUrl,
+        nitro,
+        setNitro,
+        getUserNitroCount,
         image,
         setImage,
         resultImage,

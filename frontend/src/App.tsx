@@ -17,15 +17,38 @@ import ImageUpscale  from "./pages/ImageUpscale"
 import UpscaleResult from "./pages/UpscaleResult"
 import ImageFormatter from "./pages/ImageFormatter"
 import RemoveText from "./pages/RemoveText"
+import { useContext, useEffect } from "react"
+import { AppContext } from "./context/AppContext"
 
 function App() {
+
+  const appContext = useContext(AppContext);
+  const nitroCount = appContext?.getUserNitroCount;
+
+  useEffect(() => {
+    nitroCount && nitroCount();
+    //console.log("Nitro count called from app.tsx " + appContext?.nitro);
+  } ,[appContext, nitroCount])
 
   return (
     <>
       <div>
         <UserSyncHandler />
         <Navbar />
-        <Toaster />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "#000",
+              color: "#fff",          
+              borderRadius: "12px",
+              padding: "12px 18px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+              fontSize: "14px",
+              fontWeight: "500",
+            },
+          }}
+        />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/editor" element={

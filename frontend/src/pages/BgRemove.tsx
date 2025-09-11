@@ -1,123 +1,337 @@
-import { ImageUpload } from "@/Components/ImageUpload";
+import SpecificFeatureSection from "@/Components/SpecificFeatureSection";
+import TipsSection from "@/Components/TipsSection";
+import { Button } from "@/Components/ui/button";
+import UseCases from "@/Components/UseCases";
 import { AppContext } from "@/context/AppContext";
-import { Shield, Sparkles, Zap } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import { ArrowLeft, Check, Download, Edit3, ImageIcon, Palette, Save, Shield, Sparkles, Star, Upload, Zap } from "lucide-react";
+import { useContext, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { Commet } from "react-loading-indicators";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const ImageBgRemover: React.FC = () => {
+const BgRemover: React.FC = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    const [processedImage, setProcessedImage] = useState<string | null>(null);
+    const [dragActive, setDragActive] = useState(false);
 
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const navigate = useNavigate();
     const location = useLocation();
-    
+    const appContext = useContext(AppContext);
+
+    const { removeBg, setImage, setBgChanged } = appContext || {};
 
     const features = [
         {
             icon: Sparkles,
             title: "AI-Powered Precision",
-            description: "Advanced AI algorithms detect and remove backgrounds with pixel-perfect accuracy"
+            description: "Advanced AI algorithms detect and remove backgrounds with pixel-perfect accuracy."
         },
         {
             icon: Zap,
             title: "Lightning Fast",
-            description: "Process images in seconds, not minutes. Get professional results instantly"
+            description: "Process images in seconds, not minutes. Get professional results instantly."
         },
         {
             icon: Shield,
             title: "Privacy First",
-            description: "Your images are processed securely and never stored on our servers"
+            description: "Your images are processed securely and never stored on our servers."
+        },
+        {
+            icon: Palette,
+            title: "Seamless Editing",
+            description: "Easily change, replace, or customize backgrounds with just a click."
         }
     ];
 
-    const navigate = useNavigate();
+    const removeBgUseCases = [
+        "Remove cluttered or messy backgrounds from product photos",
+        "Isolate subjects for clean transparent backgrounds",
+        "Create professional ID, passport, or visa photos",
+        "Prepare product listings for Amazon, Flipkart, or Shopify",
+        "Make portraits look studio-quality without editing",
+        "Clean images for social media posts and ads"
+    ];
 
-    const { removeBg , setImage , setBgChanged} = useContext<any>(AppContext);
+    const changeBgUseCases = [
+        "Replace plain backgrounds with creative themes",
+        "Add custom brand colors or logos behind products",
+        "Stage real estate or interior photos with new settings",
+        "Create eye-catching marketing banners and ads",
+        "Swap boring backdrops with scenic locations",
+        "Personalize profile pictures with unique backgrounds"
+    ];
+
+    const removeBgSamples = [
+        {
+            url: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=300&fit=crop&crop=center",
+            label: "Product Photo",
+            description: "Remove cluttered backgrounds for e-commerce listings"
+        },
+        {
+            url: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=400&h=300&fit=crop&crop=center",
+            label: "Portrait",
+            description: "Get a clean transparent or plain background"
+        },
+        {
+            url: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=400&h=300&fit=crop&crop=center",
+            label: "Pet Photo",
+            description: "Isolate pets from busy outdoor scenes"
+        },
+        {
+            url: "https://images.unsplash.com/photo-1581093588401-22d94fd1522d?w=400&h=300&fit=crop&crop=center",
+            label: "Food Photography",
+            description: "Highlight dishes without table clutter"
+        }
+    ];
+
+    const changeBgSamples = [
+        {
+            url: "https://images.unsplash.com/photo-1522202222206-6e3e4f7990b4?w=400&h=300&fit=crop&crop=center",
+            label: "Studio Portrait",
+            description: "Swap plain walls with creative backdrops"
+        },
+        {
+            url: "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=400&h=300&fit=crop&crop=center",
+            label: "Travel Photo",
+            description: "Replace background with dream destinations"
+        },
+        {
+            url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop&crop=center",
+            label: "Marketing Banner",
+            description: "Add branded or themed backgrounds"
+        },
+        {
+            url: "https://images.unsplash.com/photo-1592503254549-92c34e68f5a1?w=400&h=300&fit=crop&crop=center",
+            label: "Product Display",
+            description: "Place items in styled environments"
+        }
+    ];
+
 
     // Handle file select
-    const handleImageChange = (file: File) => {
-        setSelectedImage(file);
-        setProcessedImage(null); // reset
+    const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith("image/")) {
+                setSelectedImage(file);
+            } else {
+                toast.error("Please upload a valid image file.");
+            }
+        }
     };
 
+    const handleDrag = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === 'dragenter' || e.type === 'dragover') {
+            setDragActive(true);
+        } else if (e.type === 'dragleave') {
+            setDragActive(false);
+        }
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0) {
+            handleFiles(files);
+        }
+    };
+
+    const handleFiles = (files: File[]) => {
+        const file = files[0];
+        if (file && file.type.startsWith('image/')) {
+            setSelectedImage(file);
+            appContext?.setResultImage?.(false);
+        } else {
+            toast.error("Please upload a valid image file.");
+        }
+    };
+
+    const handleSampleImageClick = async (url: string) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const image = new File([blob], "sample-image.jpg", { type: "image/jpeg" });
+        setSelectedImage(image);
+        //console.log("Sample image clicked:", url);
+    }
+
+    // Auto process depending on page
     useEffect(() => {
         if (selectedImage && location.pathname === "/remove-bg") {
-            removeBg(selectedImage);
-            setBgChanged(false);
-        }
-        else if (location.pathname === "/change-background" && selectedImage) {
-            setImage(null);
-            setImage(selectedImage);
-            setBgChanged(true);
+            removeBg?.(selectedImage);
+            setBgChanged?.(false);
+        } else if (selectedImage && location.pathname === "/change-background") {
+            setImage?.(selectedImage);
+            setBgChanged?.(true);
             navigate("/ai/result");
         }
-    }, [selectedImage , location]);
+    }, [selectedImage, location]);
 
     return (
-        <div className="min-h-screen relative pattern-bg">
-            <div className="container mx-auto px-4">
-                {/* Main Content */}
-                <div className="grid lg:grid-cols-2 gap-20 items-center max-w-6xl mx-auto mt-30">
-                    {/* Left Side - Content */}
-                    <div className="space-y-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                        <div className="space-y-4">
-                            {
-                                location.pathname === "/remove-bg" && (
-                                    <>
-                                        <h2 className="text-4xl bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent md:text-5xl font-bold leading-tight">
-                                            Remove backgrounds instantly with AI
-                                        </h2>
-                                        <p className="text-lg text-muted-foreground">
-                                            Transform your images with our AI-powered background removal tool.
-                                            Perfect for e-commerce, social media, and professional photography.
-                                        </p>
-                                    </>
-                                )
-                            }
-                            {
-                                location.pathname === "/change-background" && (
-                                    <>
-                                        <h2 className="text-4xl bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent md:text-5xl font-bold leading-tight">
-                                            Change Background Online Free with AI
-                                        </h2>
-                                        <p className="text-lg text-muted-foreground">
-                                            Easily change the background of any image and add custom background photos. Need a quick white background remover? Or want to change the background color of the image to bold, clean colors? With ClariPix background changer, it only takes seconds.
-                                        </p>
-                                    </>
-                                )
-                            }
+        <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-secondary/5 relative">
+            {/* Navigation */}
+            <nav className="absolute left-[14%] top-0 p-4">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-4">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => navigate('/')}
+                                className="text-muted-foreground hover:text-foreground"
+                            >
+                                <ArrowLeft className="h-4 w-4 mr-2" />
+                                Back to Home
+                            </Button>
                         </div>
-
-                        {/* Features List */}
-                        <div className="space-y-4">
-                            {features.map((feature, index) => (
-                                <div
-                                    key={feature.title}
-                                    className="flex items-start space-x-4 p-4 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors"
-                                    style={{ animationDelay: `${0.4 + index * 0.1}s` }}
-                                >
-                                    <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
-                                        <feature.icon className="w-5 h-5 text-white " />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-foreground">{feature.title}</h3>
-                                        <p className="text-sm text-muted-foreground">{feature.description}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Right Side - Upload */}
-                    <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                        <ImageUpload
-                            onImageSelect={handleImageChange}
-                            selectedImage={selectedImage}
-                        />
                     </div>
                 </div>
+            </nav>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
+                {/* Header */}
+                <div className="text-center">
+                    <div className="h-10"></div>
+                    <h1 className="font-heading text-4xl md:text-6xl font-bold leading-tight ">
+                        {location.pathname === "/remove-bg" ? (
+                            <>Remove Backgrounds <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent"> Instantly</span></>
+                        ) : (
+                            <>Change Backgrounds <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Online</span></>
+                        )}
+                    </h1>
+                    <p className="text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                        {location.pathname === "/remove-bg"
+                            ? "Transform your images with our AI-powered background remover. Perfect for e-commerce, social media, and professional photography."
+                            : "Easily change the background of any image with AI. Add white, colored, or custom backgrounds in seconds."}
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2 mt-6">
+                        <div className="flex items-center bg-gradient-primary/10 px-4 py-2 rounded-full">
+                            <Star className="h-4 w-4 text-primary mr-2" />
+                            <span className="text-sm font-medium">Free Forever</span>
+                        </div>
+                        <div className="flex items-center bg-gradient-secondary/10 px-4 py-2 rounded-full">
+                            <Check className="h-4 w-4 text-primary mr-2" />
+                            <span className="text-sm font-medium">No Signup Required</span>
+                        </div>
+                        <div className="flex items-center bg-gradient-primary/10 px-4 py-2 rounded-full">
+                            <Shield className="h-4 w-4 text-primary mr-2" />
+                            <span className="text-sm font-medium">100% Private</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Upload and Processing Area */}
+                <div className="grid lg:grid-cols-3 gap-8 items-start">
+                    {/* Upload Area */}
+                    <div className="lg:col-span-1 space-y-6">
+                        <div className="bg-primary/10 hover:bg-primary/15 p-6 rounded-2xl">
+                            <h3 className="text-xl font-semibold mb-4 text-center">Upload Your Image</h3>
+                            {/* Upload Zone */}
+                            <div
+                                className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer ${dragActive
+                                    ? 'border-primary bg-primary/10 scale-105'
+                                    : 'border-primary/30 hover:border-primary hover:bg-primary/5'
+                                    }`}
+                                onDragEnter={handleDrag}
+                                onDragLeave={handleDrag}
+                                onDragOver={handleDrag}
+                                onDrop={handleDrop}
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleFileInput}
+                                />
+
+                                <div className="space-y-3">
+                                    <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto">
+                                        <Upload className="h-6 w-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-foreground">Click, paste, or drop files here</p>
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                            JPG, PNG up to 20MB
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sample Images */}
+                            <div className="mt-6">
+                                <div className="flex items-center mb-3">
+                                    <div className="flex-1 border-t border-border"></div>
+                                    <span className="px-3 text-sm text-muted-foreground bg-background">or try samples</span>
+                                    <div className="flex-1 border-t border-border"></div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {location.pathname === "/remove-bg" && removeBgSamples.map((sample, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => handleSampleImageClick(sample.url)}
+                                            className="relative group overflow-hidden rounded-lg border border-border hover:border-primary transition-all duration-300"
+                                            title={sample.description}
+                                        >
+                                            <img
+                                                src={sample.url}
+                                                alt={sample.label}
+                                                className="w-full h-20 object-cover transition-transform group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="absolute bottom-1 left-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <p className="text-xs font-medium text-white truncate">{sample.label}</p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="lg:col-span-2 space-y-6 h-full">
+                        <div className="bg-primary/10 hover:bg-primary/15 p-12 rounded-2xl text-center">
+                            <div className="w-24 h-24 bg-gradient-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                                <ImageIcon className="h-12 w-12 text-primary" />
+                            </div>
+                            <h3 className="text-2xl font-bold mb-3">Ready to Start?</h3>
+                            <p className="text-lg text-muted-foreground mb-6 max-w-md mx-auto">
+                                Upload an image to remove or change its background instantly with AI
+                            </p>
+                            <Button
+                                onClick={() => fileInputRef.current?.click()}
+                                variant="secondary"
+                                size="lg"
+                                className="px-8"
+                            >
+                                <Upload className="h-5 w-5 mr-2" />
+                                Choose Image
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Features Section */}
+                <SpecificFeatureSection features={features} />
+                {
+                    location.pathname === "/remove-bg" ? (
+                        <UseCases sampleImages={removeBgSamples} useCases={removeBgUseCases} />
+                    ) : (
+                        <UseCases sampleImages={changeBgSamples} useCases={changeBgUseCases} />
+                    )
+                }
+                {/* Tips Section */}
+                <TipsSection />
             </div>
         </div>
     );
 };
 
-export default ImageBgRemover;
+export default BgRemover;
