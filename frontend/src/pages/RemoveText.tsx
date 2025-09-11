@@ -4,43 +4,19 @@ import { Button } from "@/Components/ui/button"
 import UseCases from "@/Components/UseCases";
 import { AppContext } from "@/context/AppContext";
 import { base64ToFile, uploadToCloudninary } from "@/util/Cloudinary";
-import { ArrowLeft, Check, Download, Edit3, ImageIcon, Save, Shield, Sparkles, Star, Type, Upload, Zap } from "lucide-react"
+import { ArrowLeft, Check, Download, Edit3, ImageIcon, Save, Shield, Sparkles, Star, Upload } from "lucide-react"
 import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Commet } from "react-loading-indicators";
 import { useNavigate } from "react-router-dom";
-
+import { removeTextSampleImages, removeTextfeatures } from "@/util/Data";
 
 const RemoveText = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [dragActive, setDragActive] = useState(false);
-
     const fileInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
-
-    const sampleImages = [
-        {
-            url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop&crop=center',
-            label: 'Business Card',
-            description: 'Remove company logos and text'
-        },
-        {
-            url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop&crop=center',
-            label: 'Social Media Post',
-            description: 'Clean up watermarks and captions'
-        },
-        {
-            url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop&crop=center',
-            label: 'Marketing Material',
-            description: 'Remove unwanted text overlays'
-        },
-        {
-            url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop&crop=center',
-            label: 'Product Photo',
-            description: 'Clean product images'
-        },
-    ];
 
     const useCases = [
         "Remove watermarks from stock photos",
@@ -50,30 +26,6 @@ const RemoveText = () => {
         "Clean up memes and viral images",
         "Delete timestamps from photos"
     ];
-
-    const features = [
-        {
-            icon: Sparkles,
-            title: "AI-Powered Detection",
-            description: "Advanced machine learning algorithms automatically detect and locate text, watermarks, and logos in your images with pixel-perfect precision."
-        },
-        {
-            icon: Zap,
-            title: "Lightning Fast Processing",
-            description: "Get professional results in seconds, not minutes. Our optimized AI processes images up to 10x faster than traditional tools."
-        },
-        {
-            icon: Shield,
-            title: "Privacy & Security First",
-            description: "Your images are processed locally and securely. We never store your files, ensuring complete privacy and data protection."
-        },
-        {
-            icon: Type,
-            title: "Smart Content Reconstruction",
-            description: "Our AI intelligently fills removed text areas with contextually appropriate background, maintaining natural image flow."
-        }
-    ];
-
 
     const handleFiles = (files: File[]) => {
         const file = files[0];
@@ -271,7 +223,7 @@ const RemoveText = () => {
                                     <div className="flex-1 border-t border-border"></div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
-                                    {sampleImages.map((sample, index) => (
+                                    {removeTextSampleImages.map((sample, index) => (
                                         <button
                                             key={index}
                                             onClick={() => handleSampleImageClick(sample.url)}
@@ -430,9 +382,9 @@ const RemoveText = () => {
                     </div>
                 </div>
                 {/* Features Section */}
-                <SpecificFeatureSection features={features} />
+                <SpecificFeatureSection features={removeTextfeatures} />
                 {/* Use Cases Section */}
-                <UseCases sampleImages={sampleImages} useCases={useCases}/>
+                <UseCases sampleImages={removeTextSampleImages} useCases={useCases}/>
                 {/* Tips Section */}
                 <TipsSection />
             </div>

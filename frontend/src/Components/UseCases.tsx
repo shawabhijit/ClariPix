@@ -9,20 +9,17 @@ interface SampleImage {
 const UseCases = ({sampleImages , useCases} : {sampleImages: SampleImage[] , useCases : string[]}) => {
 
     return (
-        <div className="bg-primary/10 hover:bg-primary/15 p-8 rounded-2xl">
+        <div className="bg-primary/10 hover:bg-primary/15 rounded-2xl mb-24 p-16">
             <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h3 className="text-2xl font-bold mb-4">What Can You Remove?</h3>
-                    <p className="text-muted-foreground mb-6">
-                        Our AI can handle any text — be it a caption that divides your attention, an unwanted sign, or any other text. All you need to do is upload your image, and then our technology can accurately detect and remove the text.
-                    </p>
+                    <h3 className="text-2xl font-bold mb-6">What Can You Remove?</h3>
                     <div className="grid grid-cols-1 gap-3">
                         {useCases.map((useCase, index) => (
                             <div key={index} className="flex items-center space-x-3">
                                 <div className="w-6 h-6 gradient-primary rounded-full flex items-center justify-center flex-shrink-0">
                                     <Check className="h-3 w-3 text-white" />
                                 </div>
-                                <span className="text-sm">{useCase}</span>
+                                <span className="text-sm text-muted-foreground/70">{useCase}</span>
                             </div>
                         ))}
                     </div>
@@ -39,7 +36,7 @@ const UseCases = ({sampleImages , useCases} : {sampleImages: SampleImage[] , use
                                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-80" />
                                 <div className="absolute bottom-2 left-2 right-2">
                                     <p className="text-xs font-semibold text-white">{sample.label}</p>
-                                    <p className="text-xs text-white/80">{sample.description}</p>
+                                    <p className="text-xs text-muted-foreground/70">{sample.description}</p>
                                 </div>
                             </div>
                         ))}

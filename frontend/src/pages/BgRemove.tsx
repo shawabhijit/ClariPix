@@ -3,17 +3,15 @@ import TipsSection from "@/Components/TipsSection";
 import { Button } from "@/Components/ui/button";
 import UseCases from "@/Components/UseCases";
 import { AppContext } from "@/context/AppContext";
-import { ArrowLeft, Check, Download, Edit3, ImageIcon, Palette, Save, Shield, Sparkles, Star, Upload, Zap } from "lucide-react";
+import { ArrowLeft, Check, ImageIcon, Shield, Star, Upload} from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { Commet } from "react-loading-indicators";
 import { useLocation, useNavigate } from "react-router-dom";
+import { features , removeBgUseCases , changeBgUseCases , removeBgSamples , changeBgSamples } from "@/util/Data";
 
 const BgRemover: React.FC = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [dragActive, setDragActive] = useState(false);
-
-
     const fileInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -21,104 +19,21 @@ const BgRemover: React.FC = () => {
 
     const { removeBg, setImage, setBgChanged } = appContext || {};
 
-    const features = [
-        {
-            icon: Sparkles,
-            title: "AI-Powered Precision",
-            description: "Advanced AI algorithms detect and remove backgrounds with pixel-perfect accuracy."
-        },
-        {
-            icon: Zap,
-            title: "Lightning Fast",
-            description: "Process images in seconds, not minutes. Get professional results instantly."
-        },
-        {
-            icon: Shield,
-            title: "Privacy First",
-            description: "Your images are processed securely and never stored on our servers."
-        },
-        {
-            icon: Palette,
-            title: "Seamless Editing",
-            description: "Easily change, replace, or customize backgrounds with just a click."
-        }
-    ];
-
-    const removeBgUseCases = [
-        "Remove cluttered or messy backgrounds from product photos",
-        "Isolate subjects for clean transparent backgrounds",
-        "Create professional ID, passport, or visa photos",
-        "Prepare product listings for Amazon, Flipkart, or Shopify",
-        "Make portraits look studio-quality without editing",
-        "Clean images for social media posts and ads"
-    ];
-
-    const changeBgUseCases = [
-        "Replace plain backgrounds with creative themes",
-        "Add custom brand colors or logos behind products",
-        "Stage real estate or interior photos with new settings",
-        "Create eye-catching marketing banners and ads",
-        "Swap boring backdrops with scenic locations",
-        "Personalize profile pictures with unique backgrounds"
-    ];
-
-    const removeBgSamples = [
-        {
-            url: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=300&fit=crop&crop=center",
-            label: "Product Photo",
-            description: "Remove cluttered backgrounds for e-commerce listings"
-        },
-        {
-            url: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=400&h=300&fit=crop&crop=center",
-            label: "Portrait",
-            description: "Get a clean transparent or plain background"
-        },
-        {
-            url: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=400&h=300&fit=crop&crop=center",
-            label: "Pet Photo",
-            description: "Isolate pets from busy outdoor scenes"
-        },
-        {
-            url: "https://images.unsplash.com/photo-1581093588401-22d94fd1522d?w=400&h=300&fit=crop&crop=center",
-            label: "Food Photography",
-            description: "Highlight dishes without table clutter"
-        }
-    ];
-
-    const changeBgSamples = [
-        {
-            url: "https://images.unsplash.com/photo-1522202222206-6e3e4f7990b4?w=400&h=300&fit=crop&crop=center",
-            label: "Studio Portrait",
-            description: "Swap plain walls with creative backdrops"
-        },
-        {
-            url: "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=400&h=300&fit=crop&crop=center",
-            label: "Travel Photo",
-            description: "Replace background with dream destinations"
-        },
-        {
-            url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop&crop=center",
-            label: "Marketing Banner",
-            description: "Add branded or themed backgrounds"
-        },
-        {
-            url: "https://images.unsplash.com/photo-1592503254549-92c34e68f5a1?w=400&h=300&fit=crop&crop=center",
-            label: "Product Display",
-            description: "Place items in styled environments"
-        }
-    ];
-
-
     // Handle file select
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length > 0) {
-            const file = files[0];
-            if (file.type.startsWith("image/")) {
-                setSelectedImage(file);
-            } else {
-                toast.error("Please upload a valid image file.");
-            }
+            handleFiles(files);
+        }
+    };
+
+    const handleFiles = (files: File[]) => {
+        const file = files[0];
+        if (file && file.type.startsWith('image/')) {
+            setSelectedImage(file);
+            appContext?.setResultImage?.(false);
+        } else {
+            toast.error("Please upload a valid image file.");
         }
     };
 
@@ -143,22 +58,11 @@ const BgRemover: React.FC = () => {
         }
     };
 
-    const handleFiles = (files: File[]) => {
-        const file = files[0];
-        if (file && file.type.startsWith('image/')) {
-            setSelectedImage(file);
-            appContext?.setResultImage?.(false);
-        } else {
-            toast.error("Please upload a valid image file.");
-        }
-    };
-
     const handleSampleImageClick = async (url: string) => {
         const response = await fetch(url);
         const blob = await response.blob();
         const image = new File([blob], "sample-image.jpg", { type: "image/jpeg" });
         setSelectedImage(image);
-        //console.log("Sample image clicked:", url);
     }
 
     // Auto process depending on page
@@ -205,22 +109,22 @@ const BgRemover: React.FC = () => {
                             <>Change Backgrounds <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Online</span></>
                         )}
                     </h1>
-                    <p className="text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-2xl text-muted-foreground/70 max-w-3xl mx-auto leading-relaxed">
                         {location.pathname === "/remove-bg"
                             ? "Transform your images with our AI-powered background remover. Perfect for e-commerce, social media, and professional photography."
                             : "Easily change the background of any image with AI. Add white, colored, or custom backgrounds in seconds."}
                     </p>
                     <div className="flex flex-wrap justify-center gap-2 mt-6">
-                        <div className="flex items-center bg-gradient-primary/10 px-4 py-2 rounded-full">
-                            <Star className="h-4 w-4 text-primary mr-2" />
+                        <div className="flex items-center gradient-accent px-4 py-2 rounded-full">
+                            <Star className="h-4 w-4 text-white mr-2" />
                             <span className="text-sm font-medium">Free Forever</span>
                         </div>
-                        <div className="flex items-center bg-gradient-secondary/10 px-4 py-2 rounded-full">
-                            <Check className="h-4 w-4 text-primary mr-2" />
+                        <div className="flex items-center gradient-accent px-4 py-2 rounded-full">
+                            <Check className="h-4 w-4 text-white mr-2" />
                             <span className="text-sm font-medium">No Signup Required</span>
                         </div>
-                        <div className="flex items-center bg-gradient-primary/10 px-4 py-2 rounded-full">
-                            <Shield className="h-4 w-4 text-primary mr-2" />
+                        <div className="flex items-center gradient-accent px-4 py-2 rounded-full">
+                            <Shield className="h-4 w-4 text-white mr-2" />
                             <span className="text-sm font-medium">100% Private</span>
                         </div>
                     </div>
@@ -274,6 +178,24 @@ const BgRemover: React.FC = () => {
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
                                     {location.pathname === "/remove-bg" && removeBgSamples.map((sample, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => handleSampleImageClick(sample.url)}
+                                            className="relative group overflow-hidden rounded-lg border border-border hover:border-primary transition-all duration-300"
+                                            title={sample.description}
+                                        >
+                                            <img
+                                                src={sample.url}
+                                                alt={sample.label}
+                                                className="w-full h-20 object-cover transition-transform group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="absolute bottom-1 left-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <p className="text-xs font-medium text-white truncate">{sample.label}</p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                    {location.pathname === "/change-background" && changeBgSamples.map((sample, index) => (
                                         <button
                                             key={index}
                                             onClick={() => handleSampleImageClick(sample.url)}
