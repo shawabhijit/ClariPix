@@ -6,22 +6,31 @@ import { useAuth, useClerk } from "@clerk/clerk-react"
 import { placeOrder } from "@/context/OrderService"
 import { useContext } from "react"
 import { AppContext } from "@/context/AppContext"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
 
 const PricingPage = () => {
+    const navigate = useNavigate();
     const auth  = useAuth();
     const isSignedIn = auth.isSignedIn;
     const getToken = auth.getToken;
     const {openSignIn} = useClerk();
     const appContext = useContext(AppContext);
     const getUserNitroCount = appContext?.getUserNitroCount;
+    const backendUrl = appContext?.backendUrl;
 
     const handleOrder = (planId: string) => {
         if (!isSignedIn) {
             openSignIn();
         }
+        if (planId === "Free") {
+            toast.success("You have successfully subscribed to the Free plan!");
+            navigate("/")
+            return;
+        }
         placeOrder({planId , getToken , onSuccess : () => {
             getUserNitroCount?.();
-        }});
+        } , backendUrl });
     }
 
     return (
@@ -48,15 +57,16 @@ const PricingPage = () => {
                             </p>
 
                             <Button
+                                onClick={() => navigate("/")}
                                 size="lg"
-                                className="bg-accent text-accent-foreground hover:bg-accent/90 glow-green hover-glow text-lg px-8 py-6 font-semibold"
+                                className="bg-accent text-accent-foreground hover:bg-accent/90 glow-green hover-glow text-lg px-8 py-6 font-semibold cursor-pointer"
                             >
                                 Get Started Free
                             </Button>
                         </div>
                     </div>
                 </div>
-                <PricingPlans />
+                <PricingPlans handelOrder={handleOrder} />
                 {/* <PricingFAQ /> */}
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-12">

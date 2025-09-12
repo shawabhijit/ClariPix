@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { AppContext } from "./AppContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -9,32 +7,25 @@ declare global {
     }
 }
 
-
-const appContext = useContext(AppContext)
-const backendUrl = appContext?.backendUrl;
-
-export const placeOrder = async ({planId , getToken , onSuccess} : any) => {
-
+export const placeOrder = async ({planId , getToken , onSuccess , backendUrl} : any) => {
     try {
         const token = await getToken();
-
         const response = await axios.post(`${backendUrl}/orders?planId=${planId}`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-
         if (response.status === 200) {
-            initializePayment({order: response.data , getToken , onSuccess})
+            initializePayment({order: response.data , getToken , onSuccess , backendUrl})
         }
     }
     catch (error : any) {
         console.error("Error placing order:", error);
-        toast.error("Failed to place order. Please try again." + error.message);
+        toast.error(error.response.data.error);
     }
 }
 
-const initializePayment = ({order , getToken , onSuccess} : any) => {
+const initializePayment = ({order , getToken , onSuccess , backendUrl} : any) => {
 
     const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,

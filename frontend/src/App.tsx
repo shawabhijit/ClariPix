@@ -1,12 +1,10 @@
-import { Routes } from "react-router-dom"
+import { Routes, useLocation } from "react-router-dom"
 import Navbar from "./Components/Navbar"
 import LandingPage from "./pages/LandingPage"
 import { Route } from "react-router-dom"
 import Footer from "./Components/Footer"
 import { Toaster } from "react-hot-toast"
 import UserSyncHandler from "./context/UserSyncHandler"
-// import DesignEditor from "./Components/Editor"
-// import CaseComponent from "./Editor/CaseComponent"
 import EditorPage from "./pages/EditorPage"
 import AiImageGeneretor from "./pages/AiImageGeneretor"
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react"
@@ -21,6 +19,17 @@ import { useContext, useEffect } from "react"
 import { AppContext } from "./context/AppContext"
 import PricingPage from "./pages/PricingPage"
 
+
+export function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
 
   const appContext = useContext(AppContext);
@@ -28,13 +37,13 @@ function App() {
 
   useEffect(() => {
     nitroCount && nitroCount();
-    //console.log("Nitro count called from app.tsx " + appContext?.nitro);
   } ,[appContext, nitroCount])
 
   return (
     <>
       <div>
         <UserSyncHandler />
+        <ScrollToTop />
         <Navbar />
         <Toaster
           position="bottom-right"
@@ -152,10 +161,8 @@ function App() {
               </SignedOut>
             </>
           } />
-
           <Route path="/pricing" element={<PricingPage />} />
         </Routes>
-        
         <Footer />
       </div>
     </>

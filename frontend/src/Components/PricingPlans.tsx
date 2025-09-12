@@ -5,7 +5,7 @@ import { Check } from "lucide-react"
 import { PricingPlans as PricingPlansData } from "@/util/Data"
 
 
-export default function PricingPlans() {
+export default function PricingPlans({handelOrder} : {handelOrder : (planId : string) => void}) {
     return (
         <div className="mb-20">
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -65,6 +65,7 @@ export default function PricingPlans() {
                                         }`}
                                     size="lg"
                                     disabled={plan.upComming}
+                                    onClick={() => handelOrder(plan.id)}
                                 >
                                     {plan.upComming ? "Comming Soon" : plan.buttonText}
                                 </Button>

@@ -168,9 +168,11 @@ export const pricingFaqs = [
 
 export const PricingPlans = [
     {
+        id:"Free",
         name: "Free",
         highlight: "5 Free Credits",
         price: "$0",
+        inInr: "0",
         period: "forever",
         description: "Perfect for getting started",
         features: [
@@ -185,10 +187,12 @@ export const PricingPlans = [
         popular: false,
         upComming: false,
     },
-    {
+    {   
+        id:"Premium",
         name: "Premium",
         highlight: "100 Credits",
         price: "$9.99",
+        inInr: "899",
         period: "per month",
         description: "Most popular choice for creators",
         features: [
@@ -204,9 +208,11 @@ export const PricingPlans = [
         upComming: false,
     },
     {
+        id:"Ultimate",
         name: "Ultimate",
         highlight: "Unlimited Creativity",
         price: "$24.99",
+        inInr: "2207",
         period: "per month",
         description: "For professionals and teams",
         features: [
