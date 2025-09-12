@@ -1,5 +1,6 @@
 package com.backend.Controller;
 
+import com.backend.Exceptions.UserException;
 import com.backend.Request.PicsartRequest;
 import com.backend.Service.AiGenerateImageService;
 import lombok.Data;
@@ -22,20 +23,18 @@ public class AiGenratedImageController {
             @RequestParam(defaultValue = "1024" , required = false) int height,
             @RequestParam(defaultValue = "3" , required = false) int count
     ) throws Exception {
-        // TODO : check user present or not
-        // TODO : check user have enough credits to generate images
 
         if (request.getPrompt() == null || request.getPrompt().isEmpty()) {
             return ResponseEntity.badRequest().body("Please provide a prompt");
         }
-
-        PicsartRequest Prequest = PicsartRequest.builder()
+        PicsartRequest pRequest = PicsartRequest.builder()
                 .height(height)
                 .width(width)
                 .prompt(request.getPrompt())
                 .count(count)
                 .build();
-        return ResponseEntity.ok().body(aiGenerateImageService.generateTextToImage(Prequest));
+
+        return ResponseEntity.ok().body(aiGenerateImageService.generateTextToImage(pRequest));
     }
 
     @GetMapping("/images/{inferenceId}")

@@ -1,6 +1,7 @@
 package com.backend.Service;
 
 import com.backend.DTO.UserDto;
+import com.backend.Exceptions.UserException;
 
 public interface UserService {
 
@@ -9,4 +10,6 @@ public interface UserService {
     UserDto getUserByClerkId(String clerkId);
 
     void deleteUserByClerkId(String clerkId);
+
+    UserDto AuthenticateUser() throws UserException;
 }

@@ -1,16 +1,14 @@
 package com.backend.Controller;
 
 import com.backend.DTO.UserDto;
+import com.backend.Exceptions.UserException;
 import com.backend.Response.RemoveBgResponse;
 import com.backend.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -54,5 +52,14 @@ public class UserController {
                             .build()
             );
         }
+    }
+
+    @GetMapping("/{clerkId}/nitroCount")
+    public ResponseEntity<?> getUserNitroCount (@PathVariable("clerkId") String clerkId) throws UserException {
+        UserDto user = userService.getUserByClerkId(clerkId);
+        if (user == null) {
+            throw new UserException("User not found with provided clerk id.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(user.getCredits());
     }
 }

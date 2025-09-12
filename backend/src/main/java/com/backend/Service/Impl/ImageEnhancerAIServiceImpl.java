@@ -62,7 +62,7 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
     }
 
     @Override
-    public byte[] removeTextFromImage(MultipartFile file) throws UserException {
+    public byte[] removeTextFromImage(MultipartFile imageFile) throws UserException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth.getName() == null || auth.getName().isEmpty()) {
@@ -73,7 +73,7 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
         if (user.getCredits() == 0) {
             throw new UserException("You don't have enough credits to remove text from the image.");
         }
-        byte[] imageBytes =  clipDropClient.removeTextFromImage(clipDropApiKey , file);
+        byte[] imageBytes =  clipDropClient.removeTextFromImage(clipDropApiKey , imageFile);
 
         if (imageBytes != null) {
             user.setCredits(user.getCredits() - 1);

@@ -1,10 +1,16 @@
 package com.backend.Service.Impl;
 
 import com.backend.DTO.UserDto;
+import com.backend.Exceptions.UserException;
 import com.backend.Repository.UserRepo;
+import com.backend.Response.RemoveBgResponse;
 import com.backend.Service.UserService;
 import com.backend.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +53,20 @@ public class UserServiceImpl implements UserService {
     public void deleteUserByClerkId(String clerkId) {
         User user = userRepo.findByClerkId(clerkId).orElseThrow(() -> new UsernameNotFoundException("user not found"));
         userRepo.delete(user);
+    }
+
+    @Override
+    public UserDto AuthenticateUser() throws UserException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.getName().isEmpty() || auth.getName() == null) {
+            throw new UserException("User not found. Please Login first.");
+        }
+        UserDto user = getUserByClerkId(auth.getName());
+        // Validation : if exits and have credits
+        if (user.getCredits() == 0) {
+            throw new UserException("You don't have enough credits. Buy Subscription plan");
+        }
+        return user;
     }
 
     private UserDto mapToDto(User user) {

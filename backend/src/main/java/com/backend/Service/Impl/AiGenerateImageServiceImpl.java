@@ -1,13 +1,18 @@
 package com.backend.Service.Impl;
 
 import com.backend.Client.PicsartClient;
+import com.backend.DTO.UserDto;
+import com.backend.Exceptions.UserException;
 import com.backend.Request.PicsartRequest;
 import com.backend.Response.PicsartAiGeneratePostResponse;
 import com.backend.Response.PicsartDataAIGenerateResponse;
 import com.backend.Response.PicsartResponse;
 import com.backend.Service.AiGenerateImageService;
+import com.backend.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,35 +23,31 @@ public class AiGenerateImageServiceImpl implements AiGenerateImageService {
     String picsartApiKey;
 
     private final PicsartClient picsartClient;
+    private final UserService userService;
 
     @Override
-    public PicsartAiGeneratePostResponse generateTextToImage(PicsartRequest request) {
-        return picsartClient.textToImage(picsartApiKey , request);
+    public PicsartAiGeneratePostResponse generateTextToImage(PicsartRequest request) throws UserException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() == null || authentication.getName().isEmpty()) {
+            throw new UserException("You don't have permission to create image from the image. Please Login first.");
+        }
+        UserDto user = userService.getUserByClerkId(authentication.getName());
+        // Validation : if exits and have credits
+        if (user.getCredits() == 0) {
+            throw new UserException("You don't have enough credits to remove text from the image.");
+        }
+        PicsartAiGeneratePostResponse res = picsartClient.textToImage(picsartApiKey , request);
+
+        if (res != null) {
+            user.setCredits(user.getCredits() - 3);
+            userService.saveUser(user);
+        }
+
+        return res;
     }
 
     @Override
     public PicsartResponse getGeneratedImages(String inference_id) {
         return picsartClient.getText2Image(picsartApiKey , inference_id);
     }
-
-
-    //6bfafdad-5d09-46c5-93f5-f6b65634f5eb
 }
-/*
-
-{
-  "status": "FINISHED",
-  "data": [
-    {
-      "id": "740e03c2-66ff-48d2-a3c1-df6783199f05",
-      "url": "https://aicdn.picsart.com/c3a101a9-b07a-4ec5-9c82-ac99b064f76f.jpg",
-      "status": "DONE"
-    },
-    {
-      "id": "3e6ab4ca-990c-4afe-98a7-08dc125fa99b",
-      "url": "https://aicdn.picsart.com/525dc486-fb5c-4184-8a42-75f68b9fb78e.jpg",
-      "status": "DONE"
-    }
-  ]
-}
- */
