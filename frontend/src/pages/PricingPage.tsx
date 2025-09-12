@@ -2,8 +2,28 @@ import PricingPlans  from "@/Components/PricingPlans"
 import { Button } from "@/Components/ui/button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/Components/ui/accordion"
 import { pricingFaqs } from "@/util/Data"
+import { useAuth, useClerk } from "@clerk/clerk-react"
+import { placeOrder } from "@/context/OrderService"
+import { useContext } from "react"
+import { AppContext } from "@/context/AppContext"
 
 const PricingPage = () => {
+    const auth  = useAuth();
+    const isSignedIn = auth.isSignedIn;
+    const getToken = auth.getToken;
+    const {openSignIn} = useClerk();
+    const appContext = useContext(AppContext);
+    const getUserNitroCount = appContext?.getUserNitroCount;
+
+    const handleOrder = (planId: string) => {
+        if (!isSignedIn) {
+            openSignIn();
+        }
+        placeOrder({planId , getToken , onSuccess : () => {
+            getUserNitroCount?.();
+        }});
+    }
+
     return (
         <div className="min-h-screen gradient-bg">
             <div className="container mx-auto max-w-7xl px-4 py-16">
