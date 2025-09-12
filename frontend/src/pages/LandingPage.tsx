@@ -2,6 +2,7 @@ import CommingFeatures from '@/Components/CommingFeatures'
 import CtaSection from '@/Components/CtaSection'
 import Features from '@/Components/Features'
 import HeroSections from '@/Components/HeroSections'
+import PricingTable from '@/Components/PricingPlans'
 import Reviews from '@/Components/Reviews'
 import ScrollReveal from '@/util/ScrollReveal'
 

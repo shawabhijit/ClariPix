@@ -1,4 +1,4 @@
-import { Palette, Shield, Sparkles, Type, Zap } from "lucide-react";
+import { Crown, Palette, Shield, Sparkles, Type, Zap } from "lucide-react";
 
 export const features = [
     {
@@ -132,3 +132,94 @@ export const removeTextSampleImages = [
         description: 'Clean product images'
     },
 ];
+
+export const pricingFaqs = [
+    {
+        question: "What are credits and how do they work?",
+        answer:
+            "Credits are used for AI-powered operations like background removal, upscaling, and advanced editing. Each operation consumes a certain number of credits based on complexity. Free users get 5 credits to start, Premium users get 100 credits monthly, and Ultimate users have unlimited credits.",
+    },
+    {
+        question: "Can I switch plans anytime?",
+        answer:
+            "Yes! You can upgrade or downgrade your plan at any time. When upgrading, you'll get immediate access to new features. When downgrading, changes take effect at your next billing cycle, and you'll retain access to premium features until then.",
+    },
+    {
+        question: "Do unused credits roll over?",
+        answer:
+            "Credits reset monthly for Premium users. However, any unused credits from the current month will carry over to the next month, up to a maximum of 200 credits total. Ultimate users have unlimited credits, so this doesn't apply.",
+    },
+    {
+        question: "What payment methods are supported?",
+        answer:
+            "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and Apple Pay. All payments are processed securely through Stripe with enterprise-grade encryption.",
+    },
+    {
+        question: "Is there a free trial for premium features?",
+        answer:
+            "Yes! New users get 5 free credits to try our AI-powered features. You can also start with our Free plan and upgrade anytime. We occasionally offer extended trial periods for Premium and Ultimate plans.",
+    },
+    {
+        question: "What happens to my projects if I downgrade?",
+        answer:
+            "Your projects and edited photos remain accessible regardless of your plan. However, you may lose access to certain premium features and your storage limit may be reduced. We'll notify you before any changes take effect.",
+    },
+]
+
+export const PricingPlans = [
+    {
+        name: "Free",
+        highlight: "5 Free Credits",
+        price: "$0",
+        period: "forever",
+        description: "Perfect for getting started",
+        features: [
+            "Free format changing",
+            "Limited photo editing tools",
+            "Limited resolution for background change & upscale",
+            "512MB storage",
+        ],
+        buttonText: "Start Free",
+        buttonVariant: "outline" as const,
+        icon: Sparkles,
+        popular: false,
+        upComming: false,
+    },
+    {
+        name: "Premium",
+        highlight: "100 Credits",
+        price: "$9.99",
+        period: "per month",
+        description: "Most popular choice for creators",
+        features: [
+            "High-resolution background change & upscale",
+            "Remove text & watermarks",
+            "All advanced photo editing tools",
+            "2GB storage",
+        ],
+        buttonText: "Upgrade Now",
+        buttonVariant: "default" as const,
+        icon: Zap,
+        popular: true,
+        upComming: false,
+    },
+    {
+        name: "Ultimate",
+        highlight: "Unlimited Creativity",
+        price: "$24.99",
+        period: "per month",
+        description: "For professionals and teams",
+        features: [
+            "Unlimited credits",
+            "Ultra-high-resolution exports (8K support)",
+            "Priority AI processing speed",
+            "Team collaboration tools",
+            "10GB storage",
+        ],
+        buttonText: "Go Ultimate",
+        buttonVariant: "default" as const,
+        icon: Crown,
+        popular: false,
+        upComming: true,
+    },
+]

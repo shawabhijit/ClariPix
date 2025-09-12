@@ -197,6 +197,36 @@ body {
         background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
     }
 
+    .gradient-bg {
+        background: linear-gradient(135deg, oklch(0.08 0 0) 0%, oklch(0.15 0.08 150) 50%, oklch(0.08 0 0) 100%);
+    }
+
+    .glow-green {
+        box-shadow: 0 0 20px oklch(0.7 0.25 150 / 0.3);
+    }
+
+    .glow-green-strong {
+        box-shadow: 0 0 30px oklch(0.7 0.25 150 / 0.5), 0 0 60px oklch(0.7 0.25 150 / 0.2);
+    }
+
+    .text-glow {
+        text-shadow: 0 0 10px oklch(0.7 0.25 150 / 0.8);
+    }
+
+    .border-glow {
+        border: 1px solid oklch(0.7 0.25 150 / 0.6);
+        box-shadow: 0 0 15px oklch(0.7 0.25 150 / 0.3);
+    }
+
+    .hover-glow {
+        transition: all 0.3s ease;
+    }
+
+    .hover-glow:hover {
+        box-shadow: 0 0 25px oklch(0.7 0.25 150 / 0.4), 0 0 50px oklch(0.7 0.25 150 / 0.2);
+        transform: translateY(-2px);
+    }
+
     .pattern-bg::before {
         content: '';
         position: absolute;

@@ -93,8 +93,8 @@ const Navbar = () => {
                             History
                         </Link>
                     </SignedIn>
-                    <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
-                        Contact
+                    <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
+                        Pricing
                     </Link>
                     {/* <Button onClick={printToken} variant="link" size="sm" className="text-sm font-medium hover:text-primary transition-colors">
                         get token
@@ -189,11 +189,11 @@ const Navbar = () => {
                             History
                         </Link>
                         <Link
-                            to="/contact"
+                            to="/pricing"
                             className="block text-sm font-medium hover:text-primary transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Contact
+                            Pricing
                         </Link>
                         <div className="flex flex-col space-y-2 pt-3 border-t border-border/40">
                             <SignedOut>

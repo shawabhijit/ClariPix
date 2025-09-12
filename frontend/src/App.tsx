@@ -19,6 +19,7 @@ import ImageFormatter from "./pages/ImageFormatter"
 import RemoveText from "./pages/RemoveText"
 import { useContext, useEffect } from "react"
 import { AppContext } from "./context/AppContext"
+import PricingPage from "./pages/PricingPage"
 
 function App() {
 
@@ -152,7 +153,7 @@ function App() {
             </>
           } />
 
-          
+          <Route path="/pricing" element={<PricingPage />} />
         </Routes>
         
         <Footer />
