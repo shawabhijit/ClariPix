@@ -8,11 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 
-@FeignClient(name = "picsartClient" , url="https://genai-api.picsart.io/v1")
+@FeignClient(name = "picsartClient" , url="https://genai-api.picsart.io")
 public interface PicsartClient {
 
     @PostMapping(
-            value = "/text2image",
+            value = "/v1/text2image",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -29,7 +29,6 @@ public interface PicsartClient {
             @RequestHeader("X-Picsart-API-Key") String apiKey,
             @PathVariable String inference_id
     );
-
 }
 
 /*

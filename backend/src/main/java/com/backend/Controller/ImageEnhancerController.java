@@ -87,6 +87,22 @@ public class ImageEnhancerController {
         return ResponseEntity.status(HttpStatus.OK).body(changeBgByImageResponse);
     }
 
+    @PostMapping("/upscale")
+    ResponseEntity<?> upscaleImage (
+            @RequestParam("image_file") MultipartFile imageFile,
+            @RequestParam(value = "upscale_factor" , defaultValue = "2") String upscaleFactor,
+            @RequestParam(value = "format" , defaultValue = "jpg") String format
+    ) throws UserException {
+        UserDto user = userService.AuthenticateUser();
+
+        ChangeBgByImageResponse response = imageEnhanceAIService.imageUpscale(imageFile, upscaleFactor, format);
+
+        user.setCredits(user.getCredits() - 3);
+        userService.saveUser(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("/remove-text")
     public ResponseEntity<?> removeTextFromImageHandler(@RequestParam("image_file") MultipartFile imageFile) throws UserException {
         byte[] imageBytes = imageEnhanceAIService.removeTextFromImage(imageFile);
@@ -94,44 +110,5 @@ public class ImageEnhancerController {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.TEXT_PLAIN).body(base64Image);
     }
 
-    @PostMapping("/image-upscale")
-    public ResponseEntity<?> upscaleImage(
-            @RequestParam("image_file") MultipartFile imageFile,
-            Authentication authentication
-    ) throws IOException, UserException {
-
-            UserDto user = userService.AuthenticateUser();
-
-            MultipartFileResizer.ImageDimensions dimensions = MultipartFileResizer.getImageDimensions(imageFile);
-            System.out.println("In Controller Received upscale request - width: " + dimensions.getWidth() + ", height: " + dimensions.getHeight());
-            System.out.println("File size: " + imageFile.getSize() + " bytes");
-
-            // Add validation for maximum dimensions
-            if (dimensions.getWidth()  > 4096 || dimensions.getHeight() > 4096) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        RemoveBgResponse.builder()
-                                .statusCode(HttpStatus.BAD_REQUEST)
-                                .data("Target dimensions cannot exceed 4096x4096 pixels")
-                                .success(false)
-                                .build()
-                );
-            }
-
-            System.out.println("Calling upscale service with dimensions: " + dimensions.getHeight() + "x" + dimensions.getWidth());
-            byte[] imageBytes = imageEnhanceAIService.imageUpscale(imageFile, dimensions.getWidth(), dimensions.getHeight());
-            System.out.println("Received upscaled image size: " + imageBytes.length + " bytes");
-
-            // Detect the mime type - jpeg, webp, png
-            Tika tika = new Tika();
-            String mimeType = tika.detect(imageBytes);
-            System.out.println("Detected mime type: " + mimeType);
-
-            user.setCredits(user.getCredits() - 1);
-            userService.saveUser(user);
-
-            return ResponseEntity.status(HttpStatus.OK)
-                    .contentType(MediaType.parseMediaType(mimeType))
-                    .body(imageBytes);
-    }
 
 }

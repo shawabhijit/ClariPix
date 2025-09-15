@@ -1,5 +1,6 @@
 package com.backend.Exceptions;
 
+import com.razorpay.RazorpayException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,6 +13,12 @@ public class GlobalException {
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ErrorDetails> userExceptionHandler (UserException e , WebRequest req) {
+        ErrorDetails error = new ErrorDetails(e.getMessage() , req.getDescription(false) , LocalDateTime.now());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(RazorpayException.class)
+    public ResponseEntity<ErrorDetails> razorpayExceptionHandler (RazorpayException e , WebRequest req) {
         ErrorDetails error = new ErrorDetails(e.getMessage() , req.getDescription(false) , LocalDateTime.now());
         return ResponseEntity.badRequest().body(error);
     }

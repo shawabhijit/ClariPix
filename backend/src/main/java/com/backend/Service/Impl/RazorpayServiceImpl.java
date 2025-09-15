@@ -53,22 +53,28 @@ public class RazorpayServiceImpl implements RazorpayService {
 
         try {
             RazorpayClient client = new RazorpayClient(razorpayKeyId, razorpaySecretKey);
+            //System.out.println("Razorpay client details : " + client);
             Order orderInfo = client.orders.fetch(razorpayOrderId);
             if (orderInfo.get("status").toString().equalsIgnoreCase("paid")) {
+
+                //System.out.println("Razorpay order status is paid , in the if statement paid : " + orderInfo);
                 Orders existingOrder = orderRepo.findByOrderId(razorpayOrderId)
                         .orElseThrow(() -> new RazorpayException("Order not found : "+razorpayOrderId));
 
                 if (existingOrder.getPayment()) {
+                    //System.out.println("order already paid , in the if statement paid : " + existingOrder);
                     response.put("success" , false);
                     response.put("message" , "Payment Failed.");
                     return response;
                 }
 
                 UserDto userDto = userService.getUserByClerkId(existingOrder.getClerkId());
+                //System.out.println("setting the new credits to the user ");
                 userDto.setCredits(existingOrder.getCredits() + userDto.getCredits());
 
                 userService.saveUser(userDto);
                 existingOrder.setPayment(true);
+                System.out.println("save to the user order : " + existingOrder);
                 orderRepo.save(existingOrder);
                 response.put("success" , true);
                 response.put("message" , "Nitro's Added.");

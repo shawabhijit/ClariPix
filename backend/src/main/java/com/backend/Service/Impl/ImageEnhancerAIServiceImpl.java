@@ -2,6 +2,7 @@ package com.backend.Service.Impl;
 
 import com.backend.Client.ChangeBackgroundClient;
 import com.backend.Client.ClipDropClient;
+import com.backend.Client.UpscalePicsartClient;
 import com.backend.DTO.UserDto;
 import com.backend.Exceptions.UserException;
 import com.backend.Response.ChangeBgByImageResponse;
@@ -38,6 +39,7 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
 
     private final ClipDropClient clipDropClient;
     private final ChangeBackgroundClient changeBackgroundClient;
+    private final UpscalePicsartClient upscalePicsartClient;
     private final UserService userService;
 
     @Override
@@ -51,14 +53,9 @@ public class ImageEnhancerAIServiceImpl implements ImageEnhanceAIService {
     }
 
     @Override
-    public byte[] imageUpscale(MultipartFile file, Integer target_width, Integer target_height) {
-        System.out.println("In service image → width=" + target_width + ", height=" + target_height);
-        return clipDropClient.imageUpscale(
-                clipDropApiKey,
-                file,
-                target_width,
-                target_height
-        );
+    public ChangeBgByImageResponse imageUpscale(MultipartFile image, String upscaleFactor , String format) {
+        System.out.println("In service image → upscale factor =" + upscaleFactor + ", format =" + format);
+        return upscalePicsartClient.upscaleImage(picsartApiKey , image , upscaleFactor , format);
     }
 
     @Override

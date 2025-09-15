@@ -15,7 +15,7 @@ public class ImageConverterServiceImpl implements ImageConverterService {
     private static final String MAGICK_COMMAND = IMAGE_MAGICK_PATH + "magick.exe";
 
     @Override
-    public byte[] convertFormat(byte[] inputImage, String format) throws IOException, InterruptedException {
+    public byte[] convertFormat(byte[] inputImage, String format , String quality , String height , String width ) throws IOException, InterruptedException {
 
         File inputFile = null;
         File outputFile = null;
@@ -25,6 +25,8 @@ public class ImageConverterServiceImpl implements ImageConverterService {
             if (inputImage == null || inputImage.length == 0) {
                 throw new IOException("Input image data is empty");
             }
+
+            System.out.println("provided height and width" + height +"  "+ width);
 
             // Create temporary input file with proper extension
             inputFile = File.createTempFile("input_", ".tmp");
@@ -52,10 +54,26 @@ public class ImageConverterServiceImpl implements ImageConverterService {
             // Add conversion options
             command.add("-strip"); // Remove all metadata including XMP
             command.add("-colorspace");
-            command.add("sRGB"); // Ensure consistent colorspace
+            command.add("sRGB");
+
+            // Add resize functionality if width and height are provided
+            if (width != null && height != null && Integer.parseInt(width) > 0 && Integer.parseInt(height) > 0) {
+                command.add("-resize");
+                command.add(width + "x" + height + "^");  // Note the caret
+                command.add("-gravity");
+                command.add("center");
+                command.add("-crop");
+                command.add(width + "x" + height + "+0+0");
+                System.out.println("Resizing to: " + width + "x" + height);
+            }
 
             // Set quality based on format
-            if ("jpg".equalsIgnoreCase(format) || "jpeg".equalsIgnoreCase(format)) {
+            if ("webp".equalsIgnoreCase(format)) {
+                String webpQuality = (quality != null && Integer.parseInt(quality) >= 1 && Integer.parseInt(quality) <= 100) ? quality : "90";
+                command.add("-quality");
+                command.add(webpQuality);
+            }
+            else {
                 command.add("-quality");
                 command.add("95");
             }

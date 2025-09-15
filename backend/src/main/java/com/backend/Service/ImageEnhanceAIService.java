@@ -12,7 +12,7 @@ public interface ImageEnhanceAIService {
 
     byte[] removeBackground(MultipartFile file);
     byte[] replaceBackgroundWithPrompt(MultipartFile file , String prompt);
-    byte[] imageUpscale(MultipartFile file , Integer width , Integer height);
+    ChangeBgByImageResponse imageUpscale(MultipartFile image , String upscaleFactor , String format);
     byte[] removeTextFromImage(MultipartFile file) throws UserException;
 
     ChangeBgByImageResponse changeBackground(

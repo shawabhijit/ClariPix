@@ -21,9 +21,9 @@ public class OrderServiceImpl implements OrderService {
     private final RazorpayService razorpayService;
 
     private static final Map<String , PlaneDetails> PLANE_DETAILS = Map.of(
-      "Basic" , new PlaneDetails("Basic" , 100 , 499.00),
-      "Premium" , new PlaneDetails("Premium" , 500 , 899.00),
-      "Ultimate" , new PlaneDetails("Ultimate" , 10000 , 1499.00)
+//      "Basic" , new PlaneDetails("Basic" , 100 , 499.00),
+      "Premium" , new PlaneDetails("Premium" , 100 , 899.00),
+      "Ultimate" , new PlaneDetails("Ultimate" , 10000 , 2207.00)
     );
 
     private record PlaneDetails (String name , int credits , double amount){
@@ -35,6 +35,14 @@ public class OrderServiceImpl implements OrderService {
         PlaneDetails details = PLANE_DETAILS.get(planId);
         if (details == null) {
             throw new IllegalArgumentException("Plane does not exist with id: " + planId);
+        }
+        // verify there is already a order present or not , and if present compare the amount
+        Orders presentOrder = orderRepo.findByClerkId(clerkId);
+        if (presentOrder != null) {
+            if (presentOrder.getAmount() > details.amount) {
+                throw new RazorpayException("You already have Ultimate Subscription , still want to go with premium?");
+            }
+            throw new RazorpayException("You already have a plan , Still want buy more?");
         }
         try {
             Order razorpayOrder = razorpayService.createOrder(details.amount() , "INR");

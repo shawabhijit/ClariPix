@@ -21,14 +21,6 @@ public interface ClipDropClient {
             @RequestPart("prompt") String prompt
     );
 
-    @PostMapping(value = "/image-upscaling/v1/upscale" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    byte[] imageUpscale(
-            @RequestHeader("x-api-key") String apikey,
-            @RequestPart("image_file") MultipartFile file,
-            @RequestPart("target_width") Integer target_width,
-            @RequestPart("target_height") Integer target_height
-    );
-
     @PostMapping(value = "/remove-text/v1" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     byte[] removeTextFromImage(
             @RequestHeader("x-api-key") String apiKey,

@@ -29,7 +29,11 @@ public class ImageConverterController {
     @PostMapping("/images")
     public ResponseEntity<?> convertImageFormat(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("format") String format) {
+            @RequestParam("format") String format,
+            @RequestParam String quality,
+            @RequestParam String height,
+            @RequestParam String width
+        ) {
 
         try {
             // Validate input
@@ -45,7 +49,7 @@ public class ImageConverterController {
             byte[] inputFile = file.getBytes();
 
             // Convert the image
-            byte[] outputBytes = imageConverterService.convertFormat(inputFile, format.toLowerCase());
+            byte[] outputBytes = imageConverterService.convertFormat(inputFile, format.toLowerCase(), quality, height, width);
 
             // Set appropriate headers for binary data
             HttpHeaders headers = new HttpHeaders();
