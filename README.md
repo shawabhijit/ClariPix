@@ -1,17 +1,20 @@
 # 🌟 ClariPix
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)  
-![Tech Stack](https://img.shields.io/badge/React–SpringBoot–Tailwind–Postgres–Cloudinary–Shadcn-blue)
-
-
 
 <p align="center">
   <img src="https://res.cloudinary.com/dvkvr88db/image/upload/v1757960430/WhatsApp_Image_2025-09-15_at_23.49.39_43f7b4b0_ux3qna.jpg" alt="Homepage" width="1000"/>
 </p>
 
 
-ClariPix is a full-stack image management and editing platform built with **Spring Boot**, **React**, **Tailwind CSS**, **shadcn UI**, **PostgreSQL**, **Clerk** and **Cloudinary**.  
-It allows users to upload, manage, and process images with features like format conversion, resizing, metadata handling, and cloud storage integration.
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=java,spring,react,tailwind,postgres" />
+</p>
+
+<p align="center">
+  <b>ClariPix</b> is a full-stack <b>AI-powered image management & editing platform</b>.<br/>
+  Upload, manage, and transform images with ease — from <b>background removal</b> and <b>AI generation</b> to <b>format conversion</b> and <b>upscaling</b>.
+</p>
+
 
 ---
 
