@@ -44,7 +44,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [image, setImage] = useState<boolean | File>(false);
     const [resultImage, setResultImage] = useState<string | boolean>(false);
-    const [nitro , setNitro] = useState<boolean | number | string>(false);
+    const [nitro, setNitro] = useState<boolean | number | string>(false);
     const [generatedImages, setGeneratedImages] = useState<string[]>([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [editImage, setEditImage] = useState<string | null>(null);
@@ -63,7 +63,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                 return openSignIn();
             }
             const token = await getToken();
-            const response = await axios.get(backendUrl + `/users/${user.id}/nitroCount` , {
+            const response = await axios.get(backendUrl + `/users/${user.id}/nitroCount`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -262,24 +262,26 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            //console.log("Respose from AI Image generator ..", response);
+            console.log("Respose from AI Image generator ..", response);
 
             if (response.data.status === "ACCEPTED") {
                 let inference_id = response.data.inference_id;
-                getAIGeneratedImages(inference_id, token);
+                getAIGeneratedImages(inference_id);
             }
         }
-        catch (error) {
-            //console.error("Error generating image:", error);
-            toast.error("Error generating image. Please try again.");
+        catch (error : any) {
+            console.error("Error generating image:", error);
+            toast.error(error.response?.data?.error || "Error generating image. Please try again.");
         }
     }
 
-    const getAIGeneratedImages = async (inference_id: string, token: string | null) => {
+    const getAIGeneratedImages = async (inference_id: string) => {
+        const token = await getToken();
         let attempt = 0;
         const maxAttempts = 10; // Maximum number of attempts
 
         const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 
         while (attempt < maxAttempts) {
             attempt++;
@@ -289,7 +291,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                 },
             }
             )
-            //console.log("Images from AI Image generator ..", generatedImages.data);
+            console.log("Images from AI Image generator ..", generatedImages.data);
 
             if (generatedImages.data.status === "FINISHED") {
                 setIsGenerating(false);
@@ -305,6 +307,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
                 await delay(3000); // Wait for 3 seconds
             }
         }
+
     }
 
     const getAllUserHistory = async () => {

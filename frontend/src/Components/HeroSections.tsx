@@ -4,7 +4,7 @@ import { Button } from './ui/button'
 // import { Link } from 'react-router-dom'
 import { Card, CardContent } from './ui/card'
 import { Link, useNavigate } from 'react-router-dom'
-import LaptopMockup from './LaptopMockup'
+import LaptopMockupDemoVideo from './LaptopMockup'
 import { motion } from "framer-motion"
 
 
@@ -130,8 +130,8 @@ const HeroSections = () => {
                     </div>
 
                     {/* Demo Animation Card */}
-                    <div className="relative flex justify-center lg:justify-end">
-                        <LaptopMockup imageSrc="./Hero.png" alt="Hero image displayed on laptop" />
+                    <div className="relative w-full h-full flex justify-center items-center">
+                        <LaptopMockupDemoVideo imageSrc="./HeroMain.jpg" videoSrc="https://res.cloudinary.com/dvkvr88db/video/upload/v1756131444/remove-background-demo_gjvwxs.mp4" alt="Hero image displayed on laptop" />
                     </div>
                 </div>
                 <div className="mx-auto max-w-7xl pt-20">
