@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom"
 const EditorPage = () => {
     const { editImage, setEditImage } = useContext(AppContext) || {}
     const [dragActive, setDragActive] = useState(false);
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -29,7 +28,6 @@ const EditorPage = () => {
     const handleFiles = (files: File[]) => {
         const file = files[0];
         if (file && file.type.startsWith('image/')) {
-            setSelectedImage(file);
             appContext?.setResultImage?.(false);
         } else {
             toast.error("Please upload a valid image file.");

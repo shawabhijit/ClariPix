@@ -15,7 +15,6 @@ const UpscaleResult = () => {
     const [clickedImage, setSelectedImage] = useState<string | null>(null);
     const [originalDimensions, setOriginalDimensions] = useState<ImageDimensions | null>(null);
     const [upscaledDimensions, setUpscaledDimensions] = useState<ImageDimensions | null>(null);
-    const [showActualSize, setShowActualSize] = useState(false);
 
     const appContext = useContext(AppContext);
     const image = appContext?.image;
@@ -98,10 +97,7 @@ const UpscaleResult = () => {
                             src={image ? URL.createObjectURL(image) : undefined}
                             alt="Before image"
                             className="w-full h-full object-cover"
-                            style={{
-                                maxWidth: showActualSize ? 'none' : '100%',
-                                height: showActualSize ? 'auto' : 'auto'
-                            }}
+                            
                         />
                     </div>
 
@@ -116,10 +112,7 @@ const UpscaleResult = () => {
                             <img
                                 src={resultImage as string}
                                 className="w-full h-full object-cover"
-                                style={{
-                                    maxWidth: showActualSize ? 'none' : '100%',
-                                    height: showActualSize ? 'auto' : 'auto'
-                                }}
+                                
                             />
                         )}
                         {isGenerating && (
@@ -129,12 +122,6 @@ const UpscaleResult = () => {
                         )}
                     </div>
                 </div>
-
-                {showActualSize && (
-                    <p className="text-center text-sm text-gray-600 mt-4 bg-yellow-100 p-3 rounded-lg">
-                        <strong>Note:</strong> Images are now shown at their actual pixel dimensions. Scroll to see the full images.
-                    </p>
-                )}
 
                 {/* Buttons */}
                 {

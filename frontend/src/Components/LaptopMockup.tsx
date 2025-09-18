@@ -1,12 +1,11 @@
 "use client";
 
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/Components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/Components/ui/dialog";
 import { Play } from "lucide-react";
 
 export default function LaptopMockupDemoVideo({
     imageSrc,
     videoSrc,
-    alt = "Demo Video",
 }: {
     imageSrc: string;
     videoSrc: string;
@@ -41,6 +40,7 @@ export default function LaptopMockupDemoVideo({
                                             loop
                                             muted
                                             className="w-full h-full object-cover bg-black"
+                                            
                                         />
                                     </DialogContent>
                                 </Dialog>

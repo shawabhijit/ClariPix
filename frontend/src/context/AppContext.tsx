@@ -216,6 +216,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             if (!isSignedIn) {
                 return openSignIn();
             }
+            console.log("Selected image for converter ..", selectedImage, format, quality, width, height);
             const token = await getToken();
             setResultImage(false);
             const formdata = new FormData();
@@ -461,25 +462,3 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export default AppContextProvider;
-
-
-
-//a old man setting on a chair reading a book
-
-
-/*
-
-{
-    "status": "FINISHED",
-    "data": [
-        {
-            "id": "fa7baebf-f97d-481f-adac-c05abd087f58",
-            "url": "https://aicdn.picsart.com/4ed5ec5b-e1d3-49f1-8b10-b32a352fb12c.jpg",
-            "status": "DONE"
-        }
-    ]
-}
-
-
-981af2be-fde1-4aeb-96d9-095474c2f365
-*/

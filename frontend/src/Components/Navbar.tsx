@@ -2,21 +2,21 @@ import { ChevronDown, Eraser, Menu, Palette, RefreshCw, Scissors, X, Zap } from 
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
 import { useContext, useState } from "react"
-import { SignedIn, SignedOut, useAuth, useClerk, UserButton, useUser } from "@clerk/clerk-react"
+import { SignedIn, SignedOut, useClerk, UserButton, useUser } from "@clerk/clerk-react"
 import { AppContext } from "@/context/AppContext"
 
 const Navbar = () => {
 
     const { openSignIn, openSignUp } = useClerk();
     const { user } = useUser();
-    const { getToken } = useAuth();
+    // const { getToken } = useAuth();
 
     const { setEditImage, nitro } = useContext(AppContext) || {}
 
-    const printToken = async () => {
-        const token = await getToken();
-        console.log("User Token: ", token);
-    }
+    // const printToken = async () => {
+    //     const token = await getToken();
+    //     console.log("User Token: ", token);
+    // }
 
     const openLogedIn = () => {
         setIsMenuOpen(false);

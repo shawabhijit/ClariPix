@@ -1,5 +1,5 @@
 import { Badge } from './ui/badge'
-import { ArrowRight, Eraser, Palette, Play, RefreshCw, Scissors, Sparkles, Star, Zap } from 'lucide-react'
+import { ArrowRight, Eraser, Palette, RefreshCw, Scissors, Sparkles, Star, Zap } from 'lucide-react'
 import { Button } from './ui/button'
 // import { Link } from 'react-router-dom'
 import { Card, CardContent } from './ui/card'
