@@ -153,7 +153,7 @@ const RemoveText = () => {
                     <div className="h-10"></div>
                     <h1 className="font-heading text-4xl md:text-6xl font-bold leading-tight ">
                         Instantly Remove Text From
-                        <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                        <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent text-glow">
                             Images
                         </span>
                     </h1>

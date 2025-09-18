@@ -4,6 +4,27 @@ import { Button } from './ui/button'
 // import { Link } from 'react-router-dom'
 import { Badge } from './ui/badge'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import {type Variants } from "framer-motion"
+
+const fadeInLeft: Variants = {
+    hidden: { opacity: 0, x: -100 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.8, ease: "easeOut" },
+    },
+}
+
+const fadeInRight: Variants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.8, ease: "easeOut" },
+    },
+}
+
 
 const Features = () => {
 
@@ -106,7 +127,7 @@ const Features = () => {
     ]
 
     return (
-        <section className="py-24 relative overflow-hidden ">
+        <section className="relative overflow-hidden pb-20">
             <div className="container px-4 mx-auto max-w-7xl ">
                 <div className="text-center space-y-4 mb-16">
                     <Badge variant="secondary" className="w-fit mx-auto">
@@ -135,37 +156,46 @@ const Features = () => {
                                 className={`grid grid-cols-1 p-5 md:p-0 lg:grid-cols-2 gap-20 items-center ${!isEven ? "lg:grid-flow-col-dense" : ""} bg-primary/20 rounded-2xl`}
                             >
                                 {/* Demo Section */}
-                                <div className={`${!isEven ? "lg:col-start-2" : ""}`}>
+                                <motion.div
+                                    variants={isEven ? fadeInLeft : fadeInRight}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, amount: 0.3 }}
+                                    className={`${!isEven ? "lg:col-start-2" : ""}`}
+                                >
                                     <Card className="border-0 shadow-2xl overflow-hidden p-0">
                                         <CardContent className="p-0">
                                             <div className="grid h-96 sm:h-[450px]">
                                                 <div className="relative flex flex-col">
-                                                    {
-                                                        feature.demo.endsWith(".mp4") ? (
-                                                            <video
-                                                                src={feature.demo}
-                                                                autoPlay
-                                                                loop
-                                                                muted
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <img
-                                                                src={feature.image}
-                                                                alt={feature.title}
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        )
-                                                    }
+                                                    {feature.demo.endsWith(".mp4") ? (
+                                                        <video
+                                                            src={feature.demo}
+                                                            autoPlay
+                                                            loop
+                                                            muted
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={feature.image}
+                                                            alt={feature.title}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    )}
                                                 </div>
                                             </div>
                                         </CardContent>
                                     </Card>
-                                </div>
-
+                                </motion.div>
 
                                 {/* Details Section */}
-                                <div className={`space-y-6 ${!isEven ? "lg:col-start-1 lg:row-start-1" : ""} p-5`}>
+                                <motion.div
+                                    variants={isEven ? fadeInRight : fadeInLeft}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, amount: 0.3 }}
+                                    className={`space-y-6 ${!isEven ? "lg:col-start-1 lg:row-start-1" : ""} p-5`}
+                                >
                                     <div className="space-y-4">
                                         <div
                                             className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center`}
@@ -173,8 +203,12 @@ const Features = () => {
                                             <Icon className="w-8 h-8 text-white" />
                                         </div>
                                         <div>
-                                            <h3 className="font-heading text-2xl md:text-3xl font-bold mb-3">{feature.title}</h3>
-                                            <p className="text-lg text-muted-foreground leading-relaxed">{feature.description}</p>
+                                            <h3 className="font-heading text-2xl md:text-3xl font-bold mb-3">
+                                                {feature.title}
+                                            </h3>
+                                            <p className="text-lg text-muted-foreground leading-relaxed">
+                                                {feature.description}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -194,10 +228,11 @@ const Features = () => {
                                                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                                             </Link>
                                         </Button>
-                                        <Button variant="outline" className='cursor-pointer'>Learn More</Button>
+                                        <Button variant="outline" className="cursor-pointer">Learn More</Button>
                                     </div>
-                                </div>
+                                </motion.div>
                             </div>
+
                         )
                     })}
                 </div>

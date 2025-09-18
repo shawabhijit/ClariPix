@@ -67,7 +67,6 @@ export default function History() {
 
     return (
         <div className="min-h-screen bg-background mb-10">
-
             <div className="container px-4 py-20 mx-auto max-w-7xl ">
                 {/* Filters and Search */}
                 <Card className="border-0 bg-primary/15 rounded-lg shadow-lg mb-8 p-0 text-white">

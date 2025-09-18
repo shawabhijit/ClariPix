@@ -15,7 +15,14 @@ const CaseComponent = ({image} : {image: string | null | File}) => {
             theme: 'dark',
             // Don't override license here - let CreativeEditor handle it from environment
             ui: {
-
+                theme: {
+                    components: {
+                        notification: {
+                            color: '#000000',           
+                            backgroundColor: '#ffffff',
+                        }
+                    }
+                },
                 elements: {
                     blocks: {
                         '//ly.img.ubq/page': {
@@ -35,12 +42,12 @@ const CaseComponent = ({image} : {image: string | null | File}) => {
                     },
                     navigation: {
                         // title: 'Photo Editor',
-                        position: "bottom",
+                        position: "bottom" as any,
                         action: {
                             export: {
                                 show: true,
                                 format: ['image/png']
-                            }
+                            },
                         }
                     },
                 },
@@ -80,7 +87,7 @@ const CaseComponent = ({image} : {image: string | null | File}) => {
             // This function should handle scene creation internally
             await initPhotoEditorUIConfig(
                 instance,
-                image,
+                image as any,
             );
 
             console.log('Photo editor configured successfully');
@@ -91,7 +98,7 @@ const CaseComponent = ({image} : {image: string | null | File}) => {
     }, []);
 
     return (
-        <div className="cesdkWrapperStyle h-[100vh] w-[95vw] md:h-[90vh] md:w-[80vw] mx-auto ">
+        <div className="cesdkWrapperStyle h-[100vh] text-black w-[95vw] md:h-[90vh] md:w-[80vw] mx-auto ">
             <CreativeEditor
                 className="cesdkStyle h-full w-full"
                 style={{

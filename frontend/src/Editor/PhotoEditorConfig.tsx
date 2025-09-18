@@ -1,12 +1,13 @@
 import CreativeEditorSDK from '@cesdk/cesdk-js';
-import type { CreativeEngine } from '@cesdk/cesdk-js';
+// import type { CreativeEngine } from '@cesdk/cesdk-js';
 import type { SettingsBool } from '@cesdk/cesdk-js';
-import type { AssetResult } from '@cesdk/cesdk-js';
+// import type { AssetResult } from '@cesdk/cesdk-js';
 // import { removeBackground } from '@imgly/background-removal';
 import APP_ASSETS from './Apps.json';
 import { getImageSize } from './lib/CreativeEngineUtils';
 import loadAssetSourceFromContentJSON from './lib/LoadAssetsSourceFromCountentJSON';
 import { caseAssetPath } from './Util';
+
 
 export async function initPhotoEditorUIConfig(
     instance: CreativeEditorSDK,
@@ -112,7 +113,7 @@ function setupDock(instance: CreativeEditorSDK) {
             );
             Button('open-crop', {
                 label: 'Crop',
-                icon: ({ theme }) => caseAssetPath(`/crop-large-${theme}.svg`),
+                icon: () => `/icons8-crop-100.png`,
                 isSelected: isCropPanelOpen,
                 onClick: async () => {
                     if (isCropPanelOpen) {
@@ -228,34 +229,34 @@ function setupDock(instance: CreativeEditorSDK) {
         }
     );
 
-    instance.ui.registerComponent(
-        'ly.img.apps.dock',
-        ({ builder: { Button } }) => {
-            const appsLibraryPayload = {
-                entries: ['ly.img.apps'],
-                title: 'libraries.ly.img.apps.label'
-            };
-            const isAppsAssetLibraryOpen = instance.ui.isPanelOpen(
-                '//ly.img.panel/assetLibrary',
-                { payload: appsLibraryPayload }
-            );
-            Button('open-apps', {
-                label: 'Apps',
-                icon: ({ theme }) => caseAssetPath(`/apps-sizes-large-${theme}.svg`),
-                isSelected: isAppsAssetLibraryOpen,
-                onClick: () => {
-                    if (isAppsAssetLibraryOpen) {
-                        instance.ui.closePanel('//ly.img.panel/assetLibrary');
-                    } else {
-                        closeAllPanels(instance);
-                        instance.ui.openPanel('//ly.img.panel/assetLibrary', {
-                            payload: appsLibraryPayload
-                        });
-                    }
-                }
-            });
-        }
-    );
+    // instance.ui.registerComponent(
+    //     'ly.img.apps.dock',
+    //     ({ builder: { Button } }) => {
+    //         const appsLibraryPayload = {
+    //             entries: ['ly.img.apps'],
+    //             title: 'libraries.ly.img.apps.label'
+    //         };
+    //         const isAppsAssetLibraryOpen = instance.ui.isPanelOpen(
+    //             '//ly.img.panel/assetLibrary',
+    //             { payload: appsLibraryPayload }
+    //         );
+    //         Button('open-apps', {
+    //             label: 'Apps',
+    //             icon: ({ theme }) => caseAssetPath(`/apps-sizes-large-${theme}.svg`),
+    //             isSelected: isAppsAssetLibraryOpen,
+    //             onClick: () => {
+    //                 if (isAppsAssetLibraryOpen) {
+    //                     instance.ui.closePanel('//ly.img.panel/assetLibrary');
+    //                 } else {
+    //                     closeAllPanels(instance);
+    //                     instance.ui.openPanel('//ly.img.panel/assetLibrary', {
+    //                         payload: appsLibraryPayload
+    //                     });
+    //                 }
+    //             }
+    //         });
+    //     }
+    // );
 
     instance.ui.registerComponent(
         'ly.img.adjustment.dock',
@@ -265,7 +266,7 @@ function setupDock(instance: CreativeEditorSDK) {
             );
             Button('open-adjustments', {
                 label: 'Adjust',
-                icon: ({ theme }) => caseAssetPath(`/adjustment-large-${theme}.svg`),
+                icon: () => `/icons8-adjust-100.png`,
                 isSelected: inspectorOpen,
                 onClick: () => {
                     if (inspectorOpen) {
@@ -293,7 +294,7 @@ function setupDock(instance: CreativeEditorSDK) {
             );
             Button('open-filters', {
                 label: 'Filter',
-                icon: ({ theme }) => caseAssetPath(`/filter-large-${theme}.svg`),
+                icon: () => `/icons8-filter-100.png`,
                 isSelected: inspectorOpen,
                 onClick: () => {
                     if (inspectorOpen) {
@@ -433,36 +434,36 @@ async function setupPhotoEditingScene(
     }
 }
 
-function createApplyAppAsset(
-    instance: CreativeEditorSDK
-): (asset: AssetResult) => Promise<number | undefined> {
-    return async (asset) => {
-        const engine = instance.engine;
-        if (asset.id === 'remove-bg') {
-            await applyRemoveBackground(engine);
-        }
-        return undefined;
-    };
-}
+// function createApplyAppAsset(
+//     instance: CreativeEditorSDK
+// ): (asset: AssetResult) => Promise<number | undefined> {
+//     return async (asset) => {
+//         const engine = instance.engine;
+//         if (asset.id === 'remove-bg') {
+//             await applyRemoveBackground(engine);
+//         }
+//         return undefined;
+//     };
+// }
 
-async function applyRemoveBackground(engine: CreativeEngine) {
-    const page = engine.scene.getCurrentPage();
-    if (!page) return;
+// async function applyRemoveBackground(engine: CreativeEngine) {
+//     const page = engine.scene.getCurrentPage();
+//     if (!page) return;
 
-    const fill = engine.block.getFill(page);
-    const sourceSet = engine.block.getSourceSet(fill, 'fill/image/sourceSet');
-    const imageSource = sourceSet[0];
-    const oldImageUri = imageSource.uri;
-    engine.block.setState(page, { type: 'Pending', progress: 0 });
-    // const removedBackgroundBlob = await removeBackground(oldImageUri);
-    // const newImageUri = URL.createObjectURL(removedBackgroundBlob);
-    engine.block.setState(page, { type: 'Ready' });
-    // update image file URI
-    // engine.block.setSourceSet(fill, 'fill/image/sourceSet', [
-    //     { ...imageSource, uri: newImageUri }
-    // ]);
-    engine.editor.addUndoStep();
-}
+//     const fill = engine.block.getFill(page);
+//     const sourceSet = engine.block.getSourceSet(fill, 'fill/image/sourceSet');
+//     const imageSource = sourceSet[0];
+//     const oldImageUri = imageSource.uri;
+//     engine.block.setState(page, { type: 'Pending', progress: 0 });
+//     // const removedBackgroundBlob = await removeBackground(oldImageUri);
+//     // const newImageUri = URL.createObjectURL(removedBackgroundBlob);
+//     engine.block.setState(page, { type: 'Ready' });
+//     //update image file URI
+//     // engine.block.setSourceSet(fill, 'fill/image/sourceSet', [
+//     //     { ...imageSource, uri: newImageUri }
+//     // ]);
+//     engine.editor.addUndoStep();
+// }
 
 function closeAllPanels(instance: CreativeEditorSDK) {
     // close crop:

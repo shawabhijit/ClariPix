@@ -11,7 +11,7 @@ type AppContextType = {
     getUserNitroCount?: () => {};
     image: any;
     setImage: Dispatch<SetStateAction<File | boolean>>;
-    resultImage: string | boolean;
+    resultImage: any;
     setResultImage: Dispatch<SetStateAction<string | boolean>>;
     removeBg: (selectedImage: File) => Promise<void>;
     generateImage: (prompt: string) => {};
@@ -192,22 +192,21 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
             navigate("/ai/upscale-result");
 
-            const response = await axios.post(backendUrl + "/images/image-upscale", formdata, {
+            const response = await axios.post(backendUrl + "/images/upscale", formdata, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                responseType: "blob",
+                // responseType: "blob",
             })
-            //console.log("Response from image upscaler ..", response);
+            console.log("Response from image upscaler ..", response);
 
             if (response.data) {
-                const url = URL.createObjectURL(response?.data);
-                setResultImage(url);
+                setResultImage(response?.data?.data.url);
             }
             setIsGenerating(false);
         }
         catch (error) {
-            //console.error("Error upscaling image:", error);
+            console.error("Error upscaling image:", error);
             toast.error("Error upscaling image. Please try again.");
         }
     }
@@ -333,7 +332,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const saveUserHistory = async ({ image, sorceType }: { image: string, sorceType: string }) => {
+    const saveUserHistory = async ({ image, sorceType }: { image: any, sorceType: string }) => {
         try {
             if (!isSignedIn) {
                 return openSignIn();

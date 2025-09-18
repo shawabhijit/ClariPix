@@ -104,9 +104,9 @@ const BgRemover: React.FC = () => {
                     <div className="h-10"></div>
                     <h1 className="font-heading text-4xl md:text-6xl font-bold leading-tight ">
                         {location.pathname === "/remove-bg" ? (
-                            <>Remove Backgrounds <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent"> Instantly</span></>
+                            <>Remove Backgrounds <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent text-glow"> Instantly</span></>
                         ) : (
-                            <>Change Backgrounds <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Online</span></>
+                            <>Change Backgrounds <span className="ml-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent text-glow">Online</span></>
                         )}
                     </h1>
                     <p className="text-2xl text-muted-foreground/70 max-w-3xl mx-auto leading-relaxed">

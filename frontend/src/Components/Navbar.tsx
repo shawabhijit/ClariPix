@@ -46,7 +46,7 @@ const Navbar = () => {
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg">
                         <img src="/logo1.png" alt="" className="text-white" />
                     </div>
-                    <span className="font-heading text-xl font-bold">ClariPix</span>
+                    <span className="font-heading text-xl font-bold text-glow">ClariPix</span>
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -74,7 +74,7 @@ const Navbar = () => {
                                             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
                                                 <Icon className="w-4 h-4 text-white" />
                                             </div>
-                                            <span className="text-sm font-medium">{tool.name}</span>
+                                            <span className="text-sm font-medium hover:text-primary">{tool.name}</span>
                                         </Link>
                                     )
                                 })}

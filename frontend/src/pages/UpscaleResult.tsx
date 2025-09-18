@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/Components/ui/button";
 import { Commet } from "react-loading-indicators";
 import { AppContext } from "@/context/AppContext";
-import { base64ToFile, uploadToCloudninary } from "@/util/Cloudinary";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ImagePopover from "@/Components/ImagePopover";
 
 interface ImageDimensions {
     width: number;
@@ -53,18 +52,11 @@ const UpscaleResult = () => {
         }
     }, [resultImage]);
 
-    //TODO: handle save is not working properly
     const handleSave = async () => {
-        if (!resultImage || !appContext) return;
-        const file = base64ToFile(resultImage as string, "upscaled-image.png");
-        if (!file) {
-            return toast.error("Failed to convert image for saving.");
+        if (!resultImage || !appContext) {
+            toast.error("No image to save.");
         }
-        const url = await uploadToCloudninary(file);
-        if (!url) {
-            return toast.error("Failed to upload image. Please try again.");
-        }
-        appContext?.saveUserHistory?.({ image: url, sorceType: "Enhance Resolution" });
+        appContext?.saveUserHistory?.({ image: resultImage, sorceType: "Enhance Resolution" });
     };
 
     const handleEdit = () => {
@@ -79,7 +71,6 @@ const UpscaleResult = () => {
 
     const handleDownloadImage = () => {
         if (!resultImage) return;
-
         const link = document.createElement("a");
         link.download = `upscaled-image-${upscaledDimensions?.width}x${upscaledDimensions?.height}.png`;
         link.href = resultImage as string;
@@ -146,41 +137,25 @@ const UpscaleResult = () => {
                 )}
 
                 {/* Buttons */}
-                <div className="text-center flex flex-wrap gap-5 justify-center items-center mt-12">
-                    <Button onClick={() => handleSave()} variant="secondary" className="cursor-pointer px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
-                        Save to History
-                    </Button>
-                    <Button onClick={() => handleEdit()} variant="secondary" className="cursor-pointer px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
-                        Edit Image
-                    </Button>
-                    <Button onClick={() => handleDownloadImage()} variant="secondary" className="cursor-pointer px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
-                        Download Image
-                    </Button>
-                </div>
+                {
+                    resultImage && !isGenerating && (
+                        <div className="text-center flex flex-wrap gap-5 justify-center items-center mt-12">
+                            <Button onClick={() => handleSave()} variant="secondary" className="cursor-pointer px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
+                                Save to History
+                            </Button>
+                            <Button onClick={() => handleEdit()} variant="secondary" className="cursor-pointer px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
+                                Edit Image
+                            </Button>
+                            <Button onClick={() => handleDownloadImage()} variant="secondary" className="cursor-pointer px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
+                                Download Image
+                            </Button>
+                        </div>
+                    )
+                }
             </div>
 
             {/* Popover / Modal */}
-            <AnimatePresence>
-                {clickedImage && !isGenerating && (
-                    <motion.div
-                        className="fixed w-full h-full inset-0 bg-background bg-opacity-70 flex justify-center items-center z-50"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setSelectedImage(null)}
-                    >
-                        <motion.img
-                            src={clickedImage}
-                            alt="Popup"
-                            className="rounded-xl max-w-[90vw] max-h-[90vh] shadow-2xl cursor-pointer"
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <ImagePopover clickedImage={clickedImage} setSelectedImage={setSelectedImage} isGenerating={!!isGenerating} />
         </div>
     );
 };

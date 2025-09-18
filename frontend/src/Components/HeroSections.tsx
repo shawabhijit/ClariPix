@@ -83,7 +83,7 @@ const HeroSections = () => {
                             </Badge>
                             <h1 className="font-heading text-4xl md:text-6xl font-bold leading-tight">
                                 Transform Your Images with{" "}
-                                <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                                <span className="bg-gradient-to-r text-glow from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                                     AI Magic
                                 </span>
                             </h1>
