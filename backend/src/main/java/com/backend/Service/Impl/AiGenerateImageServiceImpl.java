@@ -33,16 +33,18 @@ public class AiGenerateImageServiceImpl implements AiGenerateImageService {
         }
         UserDto user = userService.getUserByClerkId(authentication.getName());
         // Validation : if exits and have credits
-        if (user.getCredits() == 0) {
-            throw new UserException("You don't have enough credits to remove text from the image.");
+        if (user.getCredits() < 3 ) {
+            throw new UserException("You don't have enough Nitro to create image. Please Buy Subscription for create more images.");
         }
         PicsartAiGeneratePostResponse res = picsartClient.textToImage(picsartApiKey , request);
 
-        if (res != null) {
+        if (res != null && user.getCredits() > 3) {
             user.setCredits(user.getCredits() - 3);
             userService.saveUser(user);
         }
-
+        else {
+            throw new UserException("You don't have enough Nitro to create image. Please Buy Subscription for create more images.");
+        }
         return res;
     }
 

@@ -10,6 +10,7 @@ import com.backend.Service.ImageEnhanceAIService;
 import com.backend.Service.UserService;
 import com.backend.Util.MultipartFileResizer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +32,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/images")
 @RequiredArgsConstructor
+@Slf4j
 public class ImageEnhancerController {
 
     private final ImageEnhanceAIService imageEnhanceAIService;
@@ -93,12 +95,18 @@ public class ImageEnhancerController {
             @RequestParam(value = "upscale_factor" , defaultValue = "2") String upscaleFactor,
             @RequestParam(value = "format" , defaultValue = "jpg") String format
     ) throws UserException {
+        log.info("In controller image upscale factor =" + upscaleFactor);
         UserDto user = userService.AuthenticateUser();
 
         ChangeBgByImageResponse response = imageEnhanceAIService.imageUpscale(imageFile, upscaleFactor, format);
-
-        user.setCredits(user.getCredits() - 3);
-        userService.saveUser(user);
+        log.info("Comeback from image enhancer service =" + upscaleFactor);
+        if (user.getCredits() > 3) {
+            user.setCredits(user.getCredits() - 3);
+            userService.saveUser(user);
+        }
+        else {
+            throw new UserException("You don't have enough Nitros to upscale your image.");
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

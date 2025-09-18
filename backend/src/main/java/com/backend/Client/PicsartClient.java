@@ -21,7 +21,7 @@ public interface PicsartClient {
             @RequestBody PicsartRequest request
     );
 
-    @GetMapping(value = "/text2image/inferences/{inference_id}",
+    @GetMapping(value = "/v1/text2image/inferences/{inference_id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )

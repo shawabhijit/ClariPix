@@ -26,3 +26,4 @@ public interface UpscalePicsartClient {
     );
 }
 
+//https://api.picsart.io/tools/1.0/upscale
